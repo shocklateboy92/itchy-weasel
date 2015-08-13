@@ -4,12 +4,14 @@
 #include "stdafx.h"
 
 #include <CvGameCoreDLLPCH.h>
+#include <CvDllContext.h>
+
+extern "C" ICvGameContext1* DllGetGameContext();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	ICvGame1 *game = nullptr;
+	ICvGameContext1 *context = DllGetGameContext();
 	
 	return 0;
 }
-
 
