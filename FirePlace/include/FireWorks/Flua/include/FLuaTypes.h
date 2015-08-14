@@ -474,7 +474,7 @@ namespace FLua
 					lua_pop(L, 1); // Clean up the stack
 				}
 			}
-			else Details::Error(_T("Attempt to call a FLua::Function with an invalid function"));
+			else // Details::Error(_T("Attempt to call a FLua::Function with an invalid function"));
 			Details::UnlockAccess();
 			return kRetVal;
 		}

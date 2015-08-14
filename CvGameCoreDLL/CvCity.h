@@ -747,8 +747,8 @@ public:
 	uint GetCityBombardEffectTagHash() const;
 
 	int GetMaxHitPoints() const;
-	const FAutoArchive & getSyncArchive() const;
-	FAutoArchive & getSyncArchive();
+	//const FAutoArchive & getSyncArchive() const;
+	//FAutoArchive & getSyncArchive();
 	std::string debugDump(const FAutoVariableBase &) const;
 	std::string stackTraceRemark(const FAutoVariableBase &) const;
 
@@ -761,129 +761,129 @@ public:
 	bool			isFighting() const;
 
 protected:
-	FAutoArchiveClassContainer<CvCity> m_syncArchive;
+	//FAutoArchiveClassContainer<CvCity> m_syncArchive;
 
-	FAutoVariable<CvString, CvCity> m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility;
-	FAutoVariable<PlayerTypes, CvCity> m_eOwner;
-	FAutoVariable<int, CvCity> m_iX;
-	FAutoVariable<int, CvCity> m_iY;
-	FAutoVariable<int, CvCity> m_iID;
+	CvString m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility;
+	PlayerTypes m_eOwner;
+	int m_iX;
+	int m_iY;
+	int m_iID;
 
-	FAutoVariable<int, CvCity> m_iRallyX;
-	FAutoVariable<int, CvCity> m_iRallyY;
-	FAutoVariable<int, CvCity> m_iGameTurnFounded;
-	FAutoVariable<int, CvCity> m_iGameTurnAcquired;
-	FAutoVariable<int, CvCity> m_iGameTurnLastExpanded;
-	FAutoVariable<int, CvCity> m_iPopulation;
-	FAutoVariable<int, CvCity> m_iHighestPopulation;
-	FAutoVariable<int, CvCity> m_iNumGreatPeople;
-	FAutoVariable<int, CvCity> m_iBaseGreatPeopleRate;
-	FAutoVariable<int, CvCity> m_iGreatPeopleRateModifier;
-	FAutoVariable<int, CvCity> m_iGreatPeopleProgress;
-	FAutoVariable<int, CvCity> m_iJONSCultureStored;
-	FAutoVariable<int, CvCity> m_iJONSCultureLevel;
-	FAutoVariable<int, CvCity> m_iJONSCulturePerTurnFromBuildings;
-	FAutoVariable<int, CvCity> m_iJONSCulturePerTurnFromPolicies;
-	FAutoVariable<int, CvCity> m_iJONSCulturePerTurnFromSpecialists;
-	FAutoVariable<int, CvCity> m_iJONSCulturePerTurnFromTerrain;
-	FAutoVariable<int, CvCity> m_iCultureRateModifier;
-	FAutoVariable<int, CvCity> m_iNumWorldWonders;
-	FAutoVariable<int, CvCity> m_iNumTeamWonders;
-	FAutoVariable<int, CvCity> m_iNumNationalWonders;
-	FAutoVariable<int, CvCity> m_iWonderProductionModifier;
-	FAutoVariable<int, CvCity> m_iCapturePlunderModifier;
-	FAutoVariable<int, CvCity> m_iPlotCultureCostModifier;
+	int m_iRallyX;
+	int m_iRallyY;
+	int m_iGameTurnFounded;
+	int m_iGameTurnAcquired;
+	int m_iGameTurnLastExpanded;
+	int m_iPopulation;
+	int m_iHighestPopulation;
+	int m_iNumGreatPeople;
+	int m_iBaseGreatPeopleRate;
+	int m_iGreatPeopleRateModifier;
+	int m_iGreatPeopleProgress;
+	int m_iJONSCultureStored;
+	int m_iJONSCultureLevel;
+	int m_iJONSCulturePerTurnFromBuildings;
+	int m_iJONSCulturePerTurnFromPolicies;
+	int m_iJONSCulturePerTurnFromSpecialists;
+	int m_iJONSCulturePerTurnFromTerrain;
+	int m_iCultureRateModifier;
+	int m_iNumWorldWonders;
+	int m_iNumTeamWonders;
+	int m_iNumNationalWonders;
+	int m_iWonderProductionModifier;
+	int m_iCapturePlunderModifier;
+	int m_iPlotCultureCostModifier;
 	int m_iPlotBuyCostModifier;
-	FAutoVariable<int, CvCity> m_iMaintenance;
-	FAutoVariable<int, CvCity> m_iHealRate;
-	FAutoVariable<int, CvCity> m_iNoOccupiedUnhappinessCount;
-	FAutoVariable<int, CvCity> m_iFood;
-	FAutoVariable<int, CvCity> m_iFoodKept;
-	FAutoVariable<int, CvCity> m_iMaxFoodKeptPercent;
-	FAutoVariable<int, CvCity> m_iOverflowProduction;
-	FAutoVariable<int, CvCity> m_iFeatureProduction;
-	FAutoVariable<int, CvCity> m_iMilitaryProductionModifier;
-	FAutoVariable<int, CvCity> m_iSpaceProductionModifier;
-	FAutoVariable<int, CvCity> m_iFreeExperience;
-	FAutoVariable<int, CvCity> m_iCurrAirlift;
-	FAutoVariable<int, CvCity> m_iMaxAirlift;
-	FAutoVariable<int, CvCity> m_iAirModifier;
-	FAutoVariable<int, CvCity> m_iNukeModifier;
-	FAutoVariable<int, CvCity> m_iCultureUpdateTimer;
-	FAutoVariable<int, CvCity> m_iCitySizeBoost;
-	FAutoVariable<int, CvCity> m_iSpecialistFreeExperience;
-	FAutoVariable<int, CvCity> m_iStrengthValue;
-	FAutoVariable<int, CvCity> m_iDamage;
-	FAutoVariable<int, CvCity> m_iThreatValue;
-	FAutoVariable<int, CvCity> m_iGarrisonedUnit;
-	FAutoVariable<int, CvCity> m_iResourceDemanded;
-	FAutoVariable<int, CvCity> m_iWeLoveTheKingDayCounter;
-	FAutoVariable<int, CvCity> m_iLastTurnGarrisonAssigned;
-	FAutoVariable<int, CvCity> m_iThingsProduced; // total number of units, buildings, wonders, etc. this city has constructed
-	FAutoVariable<int, CvCity> m_iDemandResourceCounter;
-	FAutoVariable<int, CvCity> m_iResistanceTurns;
-	FAutoVariable<int, CvCity> m_iRazingTurns;
-	FAutoVariable<int, CvCity> m_iCountExtraLuxuries;
-	FAutoVariable<int, CvCity> m_iCheapestPlotInfluence;
+	int m_iMaintenance;
+	int m_iHealRate;
+	int m_iNoOccupiedUnhappinessCount;
+	int m_iFood;
+	int m_iFoodKept;
+	int m_iMaxFoodKeptPercent;
+	int m_iOverflowProduction;
+	int m_iFeatureProduction;
+	int m_iMilitaryProductionModifier;
+	int m_iSpaceProductionModifier;
+	int m_iFreeExperience;
+	int m_iCurrAirlift;
+	int m_iMaxAirlift;
+	int m_iAirModifier;
+	int m_iNukeModifier;
+	int m_iCultureUpdateTimer;
+	int m_iCitySizeBoost;
+	int m_iSpecialistFreeExperience;
+	int m_iStrengthValue;
+	int m_iDamage;
+	int m_iThreatValue;
+	int m_iGarrisonedUnit;
+	int m_iResourceDemanded;
+	int m_iWeLoveTheKingDayCounter;
+	int m_iLastTurnGarrisonAssigned;
+	int m_iThingsProduced; // total number of units, buildings, wonders, etc. this city has constructed
+	int m_iDemandResourceCounter;
+	int m_iResistanceTurns;
+	int m_iRazingTurns;
+	int m_iCountExtraLuxuries;
+	int m_iCheapestPlotInfluence;
 
 	OperationSlot m_unitBeingBuiltForOperation;
 
-	FAutoVariable<bool, CvCity> m_bNeverLost;
-	FAutoVariable<bool, CvCity> m_bDrafted;
-	FAutoVariable<bool, CvCity> m_bAirliftTargeted;
-	FAutoVariable<bool, CvCity> m_bProductionAutomated;
-	FAutoVariable<bool, CvCity> m_bLayoutDirty;
-	FAutoVariable<bool, CvCity> m_bMadeAttack;
-	FAutoVariable<bool, CvCity> m_bOccupied;
-	FAutoVariable<bool, CvCity> m_bPuppet;
+	bool m_bNeverLost;
+	bool m_bDrafted;
+	bool m_bAirliftTargeted;
+	bool m_bProductionAutomated;
+	bool m_bLayoutDirty;
+	bool m_bMadeAttack;
+	bool m_bOccupied;
+	bool m_bPuppet;
 	bool m_bIgnoreCityForHappiness;
-	FAutoVariable<bool, CvCity> m_bEverCapital;
-	FAutoVariable<bool, CvCity> m_bIndustrialRouteToCapital;
-	FAutoVariable<bool, CvCity> m_bFeatureSurrounded;
+	bool m_bEverCapital;
+	bool m_bIndustrialRouteToCapital;
+	bool m_bFeatureSurrounded;
 
-	FAutoVariable<PlayerTypes, CvCity> m_ePreviousOwner;
-	FAutoVariable<PlayerTypes, CvCity> m_eOriginalOwner;
-	FAutoVariable<PlayerTypes, CvCity> m_ePlayersReligion;
+	PlayerTypes m_ePreviousOwner;
+	PlayerTypes m_eOriginalOwner;
+	PlayerTypes m_ePlayersReligion;
 
-	FAutoVariable<std::vector<int>, CvCity> m_aiSeaPlotYield;
-	FAutoVariable<std::vector<int>, CvCity> m_aiRiverPlotYield;
-	FAutoVariable<std::vector<int>, CvCity> m_aiLakePlotYield;
-	FAutoVariable<std::vector<int>, CvCity> m_aiSeaResourceYield;
-	FAutoVariable<std::vector<int>, CvCity> m_aiBaseYieldRateFromTerrain;
-	FAutoVariable<std::vector<int>, CvCity> m_aiBaseYieldRateFromBuildings;
-	FAutoVariable<std::vector<int>, CvCity> m_aiBaseYieldRateFromSpecialists;
-	FAutoVariable<std::vector<int>, CvCity> m_aiBaseYieldRateFromMisc;
-	FAutoVariable<std::vector<int>, CvCity> m_aiYieldRateModifier;
-	FAutoVariable<std::vector<int>, CvCity> m_aiYieldPerPop;
-	FAutoVariable<std::vector<int>, CvCity> m_aiPowerYieldRateModifier;
-	FAutoVariable<std::vector<int>, CvCity> m_aiResourceYieldRateModifier;
-	FAutoVariable<std::vector<int>, CvCity> m_aiExtraSpecialistYield;
-	FAutoVariable<std::vector<int>, CvCity> m_aiProductionToYieldModifier;
-	FAutoVariable<std::vector<int>, CvCity> m_aiDomainFreeExperience;
-	FAutoVariable<std::vector<int>, CvCity> m_aiDomainProductionModifier;
+	std::vector<int> m_aiSeaPlotYield;
+	std::vector<int> m_aiRiverPlotYield;
+	std::vector<int> m_aiLakePlotYield;
+	std::vector<int> m_aiSeaResourceYield;
+	std::vector<int> m_aiBaseYieldRateFromTerrain;
+	std::vector<int> m_aiBaseYieldRateFromBuildings;
+	std::vector<int> m_aiBaseYieldRateFromSpecialists;
+	std::vector<int> m_aiBaseYieldRateFromMisc;
+	std::vector<int> m_aiYieldRateModifier;
+	std::vector<int> m_aiYieldPerPop;
+	std::vector<int> m_aiPowerYieldRateModifier;
+	std::vector<int> m_aiResourceYieldRateModifier;
+	std::vector<int> m_aiExtraSpecialistYield;
+	std::vector<int> m_aiProductionToYieldModifier;
+	std::vector<int> m_aiDomainFreeExperience;
+	std::vector<int> m_aiDomainProductionModifier;
 
-	FAutoVariable<std::vector<bool>, CvCity> m_abEverOwned;
-	FAutoVariable<std::vector<bool>, CvCity> m_abRevealed;
+	std::vector<bool> m_abEverOwned;
+	std::vector<bool> m_abRevealed;
 
-	FAutoVariable<CvString, CvCity> m_strScriptData;
+	CvString m_strScriptData;
 
-	FAutoVariable<std::vector<int>, CvCity> m_paiNoResource;
-	FAutoVariable<std::vector<int>, CvCity> m_paiFreeResource;
-	FAutoVariable<std::vector<int>, CvCity> m_paiNumResourcesLocal;
-	FAutoVariable<std::vector<int>, CvCity> m_paiProjectProduction;
-	FAutoVariable<std::vector<int>, CvCity> m_paiSpecialistProduction;
-	FAutoVariable<std::vector<int>, CvCity> m_paiUnitProduction;
-	FAutoVariable<std::vector<int>, CvCity> m_paiUnitProductionTime;
-	FAutoVariable<std::vector<int>, CvCity> m_paiGreatPeopleUnitRate;
-	FAutoVariable<std::vector<int>, CvCity> m_paiGreatPeopleUnitProgress;
-	FAutoVariable<std::vector<int>, CvCity> m_paiSpecialistCount;
-	FAutoVariable<std::vector<int>, CvCity> m_paiMaxSpecialistCount;
-	FAutoVariable<std::vector<int>, CvCity> m_paiForceSpecialistCount;
-	FAutoVariable<std::vector<int>, CvCity> m_paiFreeSpecialistCount;
-	FAutoVariable<std::vector<int>, CvCity> m_paiImprovementFreeSpecialists;
-	FAutoVariable<std::vector<int>, CvCity> m_paiUnitCombatFreeExperience;
-	FAutoVariable<std::vector<int>, CvCity> m_paiUnitCombatProductionModifier;
-	FAutoVariable<std::vector<int>, CvCity> m_paiFreePromotionCount;
+	std::vector<int> m_paiNoResource;
+	std::vector<int> m_paiFreeResource;
+	std::vector<int> m_paiNumResourcesLocal;
+	std::vector<int> m_paiProjectProduction;
+	std::vector<int> m_paiSpecialistProduction;
+	std::vector<int> m_paiUnitProduction;
+	std::vector<int> m_paiUnitProductionTime;
+	std::vector<int> m_paiGreatPeopleUnitRate;
+	std::vector<int> m_paiGreatPeopleUnitProgress;
+	std::vector<int> m_paiSpecialistCount;
+	std::vector<int> m_paiMaxSpecialistCount;
+	std::vector<int> m_paiForceSpecialistCount;
+	std::vector<int> m_paiFreeSpecialistCount;
+	std::vector<int> m_paiImprovementFreeSpecialists;
+	std::vector<int> m_paiUnitCombatFreeExperience;
+	std::vector<int> m_paiUnitCombatProductionModifier;
+	std::vector<int> m_paiFreePromotionCount;
 
 	int m_iBaseHappinessFromBuildings;
 	int m_iUnmoddedHappinessFromBuildings;
@@ -908,10 +908,10 @@ protected:
 	// CACHE: cache frequently used values
 	mutable int	m_iPopulationRank;
 	mutable bool m_bPopulationRankValid;
-	FAutoVariable<std::vector<int>, CvCity> m_aiBaseYieldRank;
-	FAutoVariable<std::vector<bool>, CvCity> m_abBaseYieldRankValid;
-	FAutoVariable<std::vector<int>, CvCity> m_aiYieldRank;
-	FAutoVariable<std::vector<bool>, CvCity> m_abYieldRankValid;
+	std::vector<int> m_aiBaseYieldRank;
+	std::vector<bool> m_abBaseYieldRankValid;
+	std::vector<int> m_aiYieldRank;
+	std::vector<bool> m_abYieldRankValid;
 
 	IDInfo m_combatUnit;		// The unit the city is in combat with
 
@@ -940,8 +940,8 @@ protected:
 
 namespace FSerialization
 {
-	void SyncCities();
-	void ClearCityDeltas();
+	//void SyncCities();
+	//void ClearCityDeltas();
 }
 
 #endif

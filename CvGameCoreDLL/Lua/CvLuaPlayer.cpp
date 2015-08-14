@@ -38,7 +38,8 @@
 //------------------------------------------------------------------------------
 void CvLuaPlayer::Register(lua_State* L)
 {
-	FLua::Details::CCallWithErrorHandling(L, pRegister);
+	//FLua::Details::CCallWithErrorHandling(L, pRegister);
+	pRegister(L);
 }
 //------------------------------------------------------------------------------
 void CvLuaPlayer::PushMethods(lua_State *L, int t)

@@ -596,8 +596,8 @@ public:
 	char GetContinentType() const;
 	void SetContinentType(const char cContinent);
 
-	const FAutoArchive & getSyncArchive() const;
-	FAutoArchive & getSyncArchive();
+	//const FAutoArchive & getSyncArchive() const;
+	//FAutoArchive & getSyncArchive();
 	std::string debugDump(const FAutoVariableBase &) const;
 	std::string stackTraceRemark(const FAutoVariableBase &) const;
 
@@ -714,8 +714,8 @@ protected:
 	uint m_uiTradeRouteBitFlags;
 
 
-	FAutoArchiveClassContainer<CvPlot> m_syncArchive; // this must appear before the first auto variable in the class
-	FAutoVariable<char, CvPlot> /*FeatureTypes*/ m_eFeatureType;
+	// FAutoArchiveClassContainer<CvPlot> m_syncArchive; // this must appear before the first auto variable in the class
+	char /*FeatureTypes*/ m_eFeatureType;
 	char /*ResourceTypes*/ m_eResourceType;
 	char /*ImprovementTypes*/ m_eImprovementType;
 	char /*PlayerTypes*/ m_ePlayerResponsibleForImprovement;

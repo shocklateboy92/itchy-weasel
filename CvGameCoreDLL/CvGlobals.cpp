@@ -5045,7 +5045,7 @@ void CvGlobals::SetTacticalAnalysisMapFinder(CvTwoLayerPathFinder* pVal) {m_tact
 void CvGlobals::setOutOfSyncDebuggingEnabled(bool isEnabled)
 {
 	m_bOutOfSyncDebuggingEnabled = isEnabled;
-	FAutoArchive::EnableCallStacks(isEnabled);
+	//FAutoArchive::EnableCallStacks(isEnabled);
 }
 
 bool CvGlobals::getOutOfSyncDebuggingEnabled() const

@@ -357,9 +357,9 @@ char CvDllPlot::GetContinentType() const
 {
 	return m_pPlot->GetContinentType();
 }
-//------------------------------------------------------------------------------
-FAutoArchive& CvDllPlot::GetSyncArchive()
-{
-	return m_pPlot->getSyncArchive();
-}
+////------------------------------------------------------------------------------
+//FAutoArchive& CvDllPlot::GetSyncArchive()
+//{
+//	return m_pPlot->getSyncArchive();
+//}
 //------------------------------------------------------------------------------

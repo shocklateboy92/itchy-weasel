@@ -26,7 +26,8 @@ protected:
 template<class Derived, class InstanceType>
 void CvLuaStaticInstance<Derived, InstanceType>::Register(lua_State* L)
 {
-	FLua::Details::CCallWithErrorHandling(L, pRegister);
+	//FLua::Details::CCallWithErrorHandling(L, pRegister);
+	pRegister(L);
 }
 //------------------------------------------------------------------------------
 template<class Derived, class InstanceType>

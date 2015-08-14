@@ -46,25 +46,25 @@ namespace FLua
 {
 	namespace Details
 	{
-		class PointerProtection
-		{
-		public:
-			PointerProtection();
-			~PointerProtection();
+		//class PointerProtection
+		//{
+		//public:
+		//	PointerProtection();
+		//	~PointerProtection();
 
-			// Don't ever call this outside of FLua!!!
-			void PushCData(lua_State *L, void *pVal);
+		//	// Don't ever call this outside of FLua!!!
+		//	void PushCData(lua_State *L, void *pVal);
 
-		private:
-			struct UserDataNode
-			{
-				UserDataNode() : m_pkNext(NULL) {}
-				Value m_kUD;
-				UserDataNode *m_pkNext;
-			};
+		//private:
+		//	struct UserDataNode
+		//	{
+		//		UserDataNode() : m_pkNext(NULL) {}
+		//		Value m_kUD;
+		//		UserDataNode *m_pkNext;
+		//	};
 
-			UserDataNode m_kUserData;
-		};
+		//	UserDataNode m_kUserData;
+		//};
 	}
 }
 

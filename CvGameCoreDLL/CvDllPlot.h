@@ -79,7 +79,7 @@ public:
 	int DLLCALL GetPlotIndex() const;
 	char DLLCALL GetContinentType() const;
 
-	FAutoArchive& DLLCALL GetSyncArchive();
+	//FAutoArchive& DLLCALL GetSyncArchive();
 
 private:
 	void DLLCALL Destroy();

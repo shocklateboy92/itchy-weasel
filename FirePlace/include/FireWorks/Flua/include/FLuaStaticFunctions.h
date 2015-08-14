@@ -141,7 +141,7 @@ namespace FLua
 		// 0 args with no return value
 		static int Call(void(*pfn)(), lua_State *L, const TCHAR *szLuaFnName) {
 			if( lua_gettop(L) == 0 ) (*pfn)();
-			else Error(_T("%s could not be called: takes no arguments but received %i."), szLuaFnName, lua_gettop(L));
+			// else Error(_T("%s could not be called: takes no arguments but received %i."), szLuaFnName, lua_gettop(L));
 			return 0;
 		}
 

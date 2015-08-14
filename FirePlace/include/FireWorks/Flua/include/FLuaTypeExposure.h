@@ -160,7 +160,7 @@ namespace FLua
 				lua_remove(L, -2); // Remove metatable from the stack
 			}
 			else { // If there was no metatable then something is seriously wrong
-				Details::Error("Missing metatable for table representing a C Object.");
+				// Details::Error("Missing metatable for table representing a C Object.");
 				lua_pushstring(L, "Malformed C Reflection");
 			}
 

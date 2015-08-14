@@ -76,7 +76,7 @@ public:
 	void DLLCALL Read(FDataStream& kStream);
 	void DLLCALL Write(FDataStream& kStream) const;
 
-	FAutoArchive& DLLCALL GetSyncArchive();
+	//FAutoArchive& DLLCALL GetSyncArchive();
 
 	int DLLCALL GetGold() const;
 	int DLLCALL CalculateBaseNetGold();

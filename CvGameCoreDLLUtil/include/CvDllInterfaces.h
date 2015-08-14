@@ -267,7 +267,7 @@ static const GUID guidICvPathFinderUpdate1 =
 //------------------------------------------------------------------------------
 struct lua_State;
 
-class FAutoArchive;
+// class FAutoArchive;
 class FIGameIniParser;
 
 class ICvBuildingInfo1;
@@ -888,7 +888,7 @@ public:
 	virtual bool DLLCALL IsWorkingPlot(ICvPlot1* pPlot) const = 0;
 	virtual bool DLLCALL CanWork(ICvPlot1* pPlot) const = 0;
 	virtual ICvPlot1* DLLCALL GetCityPlotFromIndex(int iIndex) const = 0;
-	virtual FAutoArchive& DLLCALL GetSyncArchive() = 0;
+	//virtual FAutoArchive& DLLCALL GetSyncArchive() = 0;
 };
 
 //------------------------------------------------------------------------------
@@ -1241,16 +1241,16 @@ class ICvNetworkSyncronization1 : public ICvUnknown
 public:
 	static GUID DLLCALL GetInterfaceId() { return guidICvNetworkSyncronization1; }
 
-	virtual void DLLCALL ClearCityDeltas() = 0;
-	virtual void DLLCALL ClearPlayerDeltas() = 0;
-	virtual void DLLCALL ClearPlotDeltas() = 0;
-	virtual void DLLCALL ClearRandomDeltas() = 0;
-	virtual void DLLCALL ClearUnitDeltas() = 0;
+	//virtual void DLLCALL ClearCityDeltas() = 0;
+	//virtual void DLLCALL ClearPlayerDeltas() = 0;
+	//virtual void DLLCALL ClearPlotDeltas() = 0;
+	//virtual void DLLCALL ClearRandomDeltas() = 0;
+	//virtual void DLLCALL ClearUnitDeltas() = 0;
 	
-	virtual void DLLCALL SyncCities() = 0;
-	virtual void DLLCALL SyncPlayers() = 0;
-	virtual void DLLCALL SyncPlots() = 0;
-	virtual void DLLCALL SyncUnits() = 0;
+	//virtual void DLLCALL SyncCities() = 0;
+	//virtual void DLLCALL SyncPlayers() = 0;
+	//virtual void DLLCALL SyncPlots() = 0;
+	//virtual void DLLCALL SyncUnits() = 0;
 };
 
 class ICvPathFinderUpdate1 : public ICvUnknown
@@ -1324,7 +1324,7 @@ public:
 	virtual int DLLCALL CalculateBaseNetGold() = 0;
 	virtual const char* DLLCALL GetEmbarkedGraphicOverride() = 0;
 
-	virtual FAutoArchive& DLLCALL GetSyncArchive() = 0;
+	//virtual FAutoArchive& DLLCALL GetSyncArchive() = 0;
 
 	virtual MinorCivTypes DLLCALL GetMinorCivType() const = 0;
 	virtual ICvDiplomacyAI1* DLLCALL GetDiplomacyAI() = 0;
@@ -1408,7 +1408,7 @@ public:
 	virtual int DLLCALL GetPlotIndex() const = 0;
 	virtual char DLLCALL GetContinentType() const = 0;
 
-	virtual FAutoArchive& DLLCALL GetSyncArchive() = 0;
+	//virtual FAutoArchive& DLLCALL GetSyncArchive() = 0;
 };
 //------------------------------------------------------------------------------
 
@@ -1771,7 +1771,7 @@ public:
 	virtual bool DLLCALL CanWork() const = 0;
 	virtual bool DLLCALL CanFound() const = 0;
 
-	virtual FAutoArchive& DLLCALL GetSyncArchive() = 0;
+	//virtual FAutoArchive& DLLCALL GetSyncArchive() = 0;
 };
 //------------------------------------------------------------------------------
 

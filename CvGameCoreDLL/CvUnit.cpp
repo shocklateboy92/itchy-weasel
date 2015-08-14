@@ -79,35 +79,35 @@ namespace FSerialization
 					const CvPlayer & player = GET_PLAYER(unit->getOwner());
 					if(unit->getOwner() == authoritativePlayer || (gDLL->IsHost() && !player.isHuman() && player.isAlive()))
 					{
-						const FAutoArchive & archive = unit->getSyncArchive();
-						if(archive.hasDeltas())
-						{
-							FMemoryStream memoryStream;
-							std::vector<std::pair<std::string, std::string> > callStacks;
-							archive.saveDelta(memoryStream, callStacks);
-							gDLL->sendUnitSyncCheck(unit->getOwner(), unit->GetID(), memoryStream, callStacks);
-						}
+						//const FAutoArchive & archive = unit->getSyncArchive();
+						//if(archive.hasDeltas())
+						//{
+						//	FMemoryStream memoryStream;
+						//	std::vector<std::pair<std::string, std::string> > callStacks;
+						//	archive.saveDelta(memoryStream, callStacks);
+						//	gDLL->sendUnitSyncCheck(unit->getOwner(), unit->GetID(), memoryStream, callStacks);
+						//}
 					}
 				}
 			}
 		}
 	}
 
-	// clears ALL deltas for ALL units
-	void ClearUnitDeltas()
-	{
-		std::set<CvUnit *>::iterator i;
-		for(i = unitsToCheck.begin(); i != unitsToCheck.end(); ++i)
-		{
-			CvUnit * unit = *i;
+	//// clears ALL deltas for ALL units
+	//void ClearUnitDeltas()
+	//{
+	//	std::set<CvUnit *>::iterator i;
+	//	for(i = unitsToCheck.begin(); i != unitsToCheck.end(); ++i)
+	//	{
+	//		CvUnit * unit = *i;
 
-			if(unit)
-			{
-				FAutoArchive & archive = unit->getSyncArchive();
-				archive.clearDelta();
-			}
-		}
-	}
+	//		if(unit)
+	//		{
+	//			FAutoArchive & archive = unit->getSyncArchive();
+	//			archive.clearDelta();
+	//		}
+	//	}
+	//}
 }
 
 bool s_dispatchingNetMessage = false;
@@ -116,173 +116,39 @@ OBJECT_VALIDATE_DEFINITION(CvUnit)
 
 // Public Functions...
 CvUnit::CvUnit() :
-m_syncArchive(*this)
-, m_iID("CvUnit::m_iID", m_syncArchive)
-, m_iHotKeyNumber("CvUnit::m_iHotKeyNumber", m_syncArchive)
-, m_iX("CvUnit::m_iX", m_syncArchive, true)
-, m_iY("CvUnit::m_iY", m_syncArchive, true)
+m_iX( true)
+, m_iY( true)
 , m_iLastMoveTurn(0)
 , m_iCycleOrder(-1)
-, m_iDeployFromOperationTurn("CvUnit::DeployFromOperationTurn", m_syncArchive)
-, m_iReconX("CvUnit::m_iReconX", m_syncArchive)
-, m_iReconY("CvUnit::m_iReconY", m_syncArchive)
-, m_iReconCount("CvUnit::m_iReconCount", m_syncArchive)
-, m_iGameTurnCreated("CvUnit::m_iGameTurnCreated", m_syncArchive)
-, m_iDamage("CvUnit::m_iDamage", m_syncArchive, true)
-, m_iMoves("CvUnit::m_iMoves", m_syncArchive, true)
-, m_bImmobile("CvUnit::m_bImmobile", m_syncArchive)
-, m_iExperience("CvUnit::m_iExperience", m_syncArchive)
-, m_iLevel("CvUnit::m_iLevel", m_syncArchive)
-, m_iCargo("CvUnit::m_iCargo", m_syncArchive)
-, m_iCargoCapacity("CvUnit::m_iCargoCapacity", m_syncArchive)
-, m_iAttackPlotX("CvUnit::m_iAttackPlotX", m_syncArchive)
-, m_iAttackPlotY("CvUnit::m_iAttackPlotY", m_syncArchive)
-, m_iCombatTimer("CvUnit::m_iCombatTimer", m_syncArchive)
-, m_iCombatFirstStrikes("CvUnit::m_iCombatFirstStrikes", m_syncArchive)
-, m_iCombatDamage("CvUnit::m_iCombatDamage", m_syncArchive)
-, m_iFortifyTurns("CvUnit::m_iFortifyTurns", m_syncArchive, true)
-, m_bFortifiedThisTurn("CvUnit::m_bFortifiedThisTurn", m_syncArchive)
-, m_iBlitzCount("CvUnit::m_iBlitzCount", m_syncArchive)
-, m_iAmphibCount("CvUnit::m_iAmphibCount", m_syncArchive)
-, m_iRiverCrossingNoPenaltyCount("CvUnit::m_iRiverCrossingNoPenaltyCount", m_syncArchive)
-, m_iEnemyRouteCount("CvUnit::m_iEnemyRouteCount", m_syncArchive)
-, m_iRivalTerritoryCount("CvUnit::m_iRivalTerritoryCount", m_syncArchive)
-, m_iMustSetUpToRangedAttackCount("CvUnit::m_iMustSetUpToRangedAttackCount", m_syncArchive)
-, m_iRangeAttackIgnoreLOSCount("CvUnit::m_iRangeAttackIgnoreLOSCount", m_syncArchive)
-, m_iRangedSupportFireCount("CvUnit::m_iRangedSupportFireCount", m_syncArchive)
-, m_iAlwaysHealCount("CvUnit::m_iAlwaysHealCount", m_syncArchive)
-, m_iHealOutsideFriendlyCount("CvUnit::m_iHealOutsideFriendlyCount", m_syncArchive)
-, m_iHillsDoubleMoveCount("CvUnit::m_iHillsDoubleMoveCount", m_syncArchive)
-, m_iImmuneToFirstStrikesCount("CvUnit::m_iImmuneToFirstStrikesCount", m_syncArchive)
-, m_iExtraVisibilityRange("CvUnit::m_iExtraVisibilityRange", m_syncArchive)
-, m_iExtraMoves("CvUnit::m_iExtraMoves", m_syncArchive)
-, m_iExtraMoveDiscount("CvUnit::m_iExtraMoveDiscount", m_syncArchive)
-, m_iExtraRange("CvUnit::m_iExtraRange", m_syncArchive)
-, m_iExtraIntercept("CvUnit::m_iExtraIntercept", m_syncArchive)
-, m_iExtraEvasion("CvUnit::m_iExtraEvasion", m_syncArchive)
-, m_iExtraFirstStrikes("CvUnit::m_iExtraFirstStrikes", m_syncArchive)
-, m_iExtraChanceFirstStrikes("CvUnit::m_iExtraChanceFirstStrikes", m_syncArchive)
-, m_iExtraWithdrawal("CvUnit::m_iExtraWithdrawal", m_syncArchive)
-, m_iExtraEnemyHeal("CvUnit::m_iExtraEnemyHeal", m_syncArchive)
-, m_iExtraNeutralHeal("CvUnit::m_iExtraNeutralHeal", m_syncArchive)
-, m_iExtraFriendlyHeal("CvUnit::m_iExtraFriendlyHeal", m_syncArchive)
-, m_iSameTileHeal("CvUnit::m_iSameTileHeal", m_syncArchive)
-, m_iAdjacentTileHeal("CvUnit::m_iAdjacentTileHeal", m_syncArchive)
+, m_iDamage( true)
+, m_iMoves( true)
+, m_iFortifyTurns( true)
 , m_iEnemyDamageChance(0)
 , m_iNeutralDamageChance(0)
 , m_iNearbyEnemyCombatMod(0)
-, m_iNearbyEnemyCombatRange(0)
-, m_iAdjacentModifier("CvUnit::m_iAdjacentModifier", m_syncArchive)
-, m_iRangedAttackModifier("CvUnit::m_iRangedAttackModifier", m_syncArchive)
-, m_iInterceptionCombatModifier("CvUnit::m_iInterceptionCombatModifier", m_syncArchive)
-, m_iInterceptionDefenseDamageModifier("CvUnit::m_iInterceptionDefenseDamageModifier", m_syncArchive)
-, m_iAirSweepCombatModifier("CvUnit::m_iAirSweepCombatModifier", m_syncArchive)
-, m_iAttackModifier("CvUnit::m_iAttackModifier", m_syncArchive)
-, m_iDefenseModifier("CvUnit::m_iDefenseModifier", m_syncArchive)
-, m_iExtraCombatPercent("CvUnit::m_iExtraCombatPercent", m_syncArchive)
-, m_iExtraCityAttackPercent("CvUnit::m_iExtraCityAttackPercent", m_syncArchive)
-, m_iExtraCityDefensePercent("CvUnit::m_iExtraCityDefensePercent", m_syncArchive)
-, m_iExtraRangedDefenseModifier("CvUnit::m_iExtraRangedDefenseModifier", m_syncArchive)
-, m_iExtraHillsAttackPercent("CvUnit::m_iExtraHillsAttackPercent", m_syncArchive)
-, m_iExtraHillsDefensePercent("CvUnit::m_iExtraHillsDefensePercent", m_syncArchive)
-, m_iExtraOpenAttackPercent("CvUnit::m_iExtraOpenAttackPercent", m_syncArchive)
-, m_iExtraOpenRangedAttackMod("CvUnit::m_iExtraOpenRangedAttackMod", m_syncArchive)
-, m_iExtraRoughAttackPercent("CvUnit::m_iExtraRoughAttackPercent", m_syncArchive)
-, m_iExtraRoughRangedAttackMod("CvUnit::m_iExtraRoughRangedAttackMod", m_syncArchive)
-, m_iExtraAttackFortifiedMod("CvUnit::m_iExtraAttackFortifiedMod", m_syncArchive)
-, m_iExtraAttackWoundedMod("CvUnit::m_iExtraAttackWoundedMod", m_syncArchive)
-, m_iExtraOpenDefensePercent("CvUnit::m_iExtraOpenDefensePercent", m_syncArchive)
-, m_iExtraRoughDefensePercent("CvUnit::m_iExtraRoughDefensePercent", m_syncArchive)
-, m_iPillageChange("CvUnit::m_iPillageChange", m_syncArchive)
-, m_iUpgradeDiscount("CvUnit::m_iUpgradeDiscount", m_syncArchive)
-, m_iExperiencePercent("CvUnit::m_iExperiencePercent", m_syncArchive)
-, m_iDropRange("CvUnit::m_iDropRange", m_syncArchive)
-, m_iAirSweepCapableCount("CvUnit::m_iAirSweepCapableCount", m_syncArchive)
-, m_iExtraNavalMoves("CvUnit::m_iExtraNavalMoves", m_syncArchive)
-, m_iKamikazePercent("CvUnit::m_iKamikazePercent", m_syncArchive)
-, m_iBaseCombat("CvUnit::m_iBaseCombat", m_syncArchive)
-, m_eFacingDirection("CvUnit::m_eFacingDirection", m_syncArchive, true)
-, m_iArmyId("CvUnit::m_iArmyId", m_syncArchive)
-, m_iIgnoreTerrainCostCount("CvUnit::m_iIgnoreTerrainCostCount", m_syncArchive)
-, m_iRoughTerrainEndsTurnCount("CvUnit::m_iRoughTerrainEndsTurnCount", m_syncArchive)
-, m_iEmbarkAbilityCount("CvUnit::m_iEmbarkAbilityCount", m_syncArchive)
-, m_iHoveringUnitCount("CvUnit::m_iHoveringUnitCount", m_syncArchive)
-, m_iFlatMovementCostCount("CvUnit::m_iFlatMovementCostCount", m_syncArchive)
-, m_iCanMoveImpassableCount("CvUnit::m_iCanMoveImpassableCount", m_syncArchive)
-, m_iOnlyDefensiveCount("CvUnit::m_iOnlyDefensiveCount", m_syncArchive)
-, m_iNoDefensiveBonusCount("CvUnit::m_iNoDefensiveBonusCount", m_syncArchive)
-, m_iNoCaptureCount("CvUnit::m_iNoCaptureCount", m_syncArchive)
-, m_iNukeImmuneCount("CvUnit::m_iNukeImmuneCount", m_syncArchive)
-, m_iHiddenNationalityCount("CvUnit::m_iHiddenNationalityCount", m_syncArchive)
-, m_iAlwaysHostileCount("CvUnit::m_iAlwaysHostileCount", m_syncArchive)
-, m_iNoRevealMapCount("CvUnit::m_iNoRevealMapCount", m_syncArchive)
-, m_iCanMoveAllTerrainCount("CvUnit::m_iCanMoveAllTerrainCount", m_syncArchive)
-, m_iCanMoveAfterAttackingCount("CvUnit::m_iCanMoveAfterAttackingCount", m_syncArchive)
-, m_iFreePillageMoveCount("CvUnit::m_iFreePillageMoveCount", m_syncArchive)
-, m_iHPHealedIfDefeatEnemy("CvUnit::m_iHPHealedIfDefeatEnemy", m_syncArchive)
-, m_iHealIfDefeatExcludeBarbariansCount("CvUnit::m_iHealIfDefeatExcludeBarbariansCount", m_syncArchive)
-, m_iTacticalAIPlotX("CvUnit::m_iTacticalAIPlotX", m_syncArchive)
-, m_iTacticalAIPlotY("CvUnit::m_iTacticalAIPlotY", m_syncArchive)
-, m_iGarrisonCityID("CvUnit::m_iGarrisonCityID", m_syncArchive)
-, m_iFlags("CvUnit::m_iFlags", m_syncArchive)
-, m_iNumAttacks("CvUnit::m_iNumAttacks", m_syncArchive)
-, m_iAttacksMade("CvUnit::m_iAttacksMade", m_syncArchive)
-, m_iGreatGeneralCount("CvUnit::m_iGreatGeneralCount", m_syncArchive)
-, m_iGreatGeneralModifier("CvUnit::m_iGreatGeneralModifier", m_syncArchive)
-, m_iFriendlyLandsModifier("CvUnit::m_iFriendlyLandsModifier", m_syncArchive)
-, m_iFriendlyLandsAttackModifier("CvUnit::m_iFriendlyLandsAttackModifier", m_syncArchive)
-, m_iOutsideFriendlyLandsModifier("CvUnit::m_iOutsideFriendlyLandsModifier", m_syncArchive)
-, m_iNumInterceptions("CvUnit::m_iNumInterceptions", m_syncArchive)
-, m_iMadeInterceptionCount("CvUnit::m_iMadeInterceptionCount", m_syncArchive)
 , m_iEverSelectedCount(0)
 , m_bIgnoreDangerWakeup(false) // slewis - make autovariable when saved games are broken
 , m_iEmbarkedNotCivilianCount(0)
 , m_iEmbarkedAllWaterCount(0)
 , m_iEmbarkExtraVisibility(0)
 , m_strName("")
-, m_bPromotionReady("CvUnit::m_bPromotionReady", m_syncArchive)
-, m_bDeathDelay("CvUnit::m_bDeathDelay", m_syncArchive)
-, m_bCombatFocus("CvUnit::m_bCombatFocus", m_syncArchive)
-, m_bInfoBarDirty("CvUnit::m_bInfoBarDirty", m_syncArchive)
-, m_bNotConverting("CvUnit::m_bNotConverting", m_syncArchive)
-, m_bAirCombat("CvUnit::m_bAirCombat", m_syncArchive)
-, m_bSetUpForRangedAttack("CvUnit::m_bSetUpForRangedAttack", m_syncArchive)
-, m_bEmbarked("CvUnit::m_bEmbarked", m_syncArchive)
-, m_bAITurnProcessed("CvUnit::m_bAITurnProcessed", m_syncArchive, false, true)
-, m_eTacticalMove("CvUnit::m_eTacticalMove", m_syncArchive)
-, m_eOwner("CvUnit::m_eOwner", m_syncArchive)
-, m_eOriginalOwner("CvUnit::m_eOriginalOwner", m_syncArchive)
-, m_eCapturingPlayer("CvUnit::m_eCapturingPlayer", m_syncArchive)
-, m_eUnitType("CvUnit::m_eUnitType", m_syncArchive)
-, m_eLeaderUnitType("CvUnit::m_eLeaderUnitType", m_syncArchive)
-, m_eInvisibleType("CvUnit::m_eInvisibleType", m_syncArchive)
-, m_eSeeInvisibleType("CvUnit::m_eSeeInvisibleType", m_syncArchive)
-, m_eGreatPeopleDirectiveType("CvUnit::m_eGreatPeopleDirectiveType", m_syncArchive)
+, m_bAITurnProcessed( true)
 , m_combatUnit()
 , m_transportUnit()
 , m_extraDomainModifiers()
-, m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility("CvUnit::m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility", m_syncArchive, "")
-, m_strScriptData("CvUnit::m_szScriptData", m_syncArchive)
+, m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility("")
 , m_iScenarioData(0)
-, m_terrainDoubleMoveCount("CvUnit::m_terrainDoubleMoveCount", m_syncArchive)
-, m_featureDoubleMoveCount("CvUnit::m_featureDoubleMoveCount", m_syncArchive)
-, m_terrainImpassableCount("CvUnit::m_terrainImpassableCount", m_syncArchive)
-, m_featureImpassableCount("CvUnit::m_featureImpassableCount", m_syncArchive)
-, m_extraTerrainAttackPercent("CvUnit::m_extraTerrainAttackPercent", m_syncArchive/*, true*/)
-, m_extraTerrainDefensePercent("CvUnit::m_extraTerrainDefensePercent", m_syncArchive/*, true*/)
-, m_extraFeatureAttackPercent("CvUnit::m_extraFeatureAttackPercent", m_syncArchive/*, true*/)
-, m_extraFeatureDefensePercent("CvUnit::m_extraFeatureDefensePercent", m_syncArchive/*, true*/)
-, m_extraUnitCombatModifier("CvUnit::m_extraUnitCombatModifier", m_syncArchive/*, true*/)
-, m_unitClassModifier("CvUnit::m_unitClassModifier", m_syncArchive/*, true*/)
+//, m_extraTerrainAttackPercent("CvUnit::m_extraTerrainAttackPercent", m_syncArchive/*, true*/)
+//, m_extraTerrainDefensePercent("CvUnit::m_extraTerrainDefensePercent", m_syncArchive/*, true*/)
+//, m_extraFeatureAttackPercent("CvUnit::m_extraFeatureAttackPercent", m_syncArchive/*, true*/)
+//, m_extraFeatureDefensePercent("CvUnit::m_extraFeatureDefensePercent", m_syncArchive/*, true*/)
+//, m_extraUnitCombatModifier("CvUnit::m_extraUnitCombatModifier", m_syncArchive/*, true*/)
+//, m_unitClassModifier("CvUnit::m_unitClassModifier", m_syncArchive/*, true*/)
 , m_iMissionTimer(0)
-, m_iMissionAIX("CvUnit::m_iMissionAIX", m_syncArchive)
-, m_iMissionAIY("CvUnit::m_iMissionAIY", m_syncArchive)
-, m_eMissionAIType("CvUnit::m_eMissionAIType", m_syncArchive)
 , m_missionAIUnit()
-, m_eActivityType("CvUnit::m_eActivityType", m_syncArchive, true)
-, m_eAutomateType("CvUnit::m_eAutomateType", m_syncArchive)
-, m_eUnitAIType("CvUnit::m_eUnitAIType", m_syncArchive)
+, m_eActivityType( NO_ACTIVITY)
 , m_thisHandle(this)
+, m_eFacingDirection(DIRECTION_EAST)
 , m_bWaitingForMove(false)
 {
     initPromotions();
@@ -612,9 +478,9 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	VALIDATE_OBJECT
 	int iI;
 
-	FAutoArchive & archive = getSyncArchive();
-	archive.clearDelta();
-	archive.reset();
+	//FAutoArchive & archive = getSyncArchive();
+	//archive.clearDelta();
+	//archive.reset();
 
 	m_iID = iID;
 	m_iHotKeyNumber = -1;
@@ -802,10 +668,10 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 
 		for( int i = 0; i < GC.getNumTerrainInfos(); i++ )
 		{
-			m_terrainDoubleMoveCount.setAt(i,0);
-			m_terrainImpassableCount.setAt(i,0);
-			m_extraTerrainAttackPercent.setAt(i,0);
-			m_extraTerrainDefensePercent.setAt(i,0);
+			m_terrainDoubleMoveCount[i] = 0;
+			m_terrainImpassableCount[i] = 0;
+			m_extraTerrainAttackPercent[i] = 0;
+			m_extraTerrainDefensePercent[i] = 0;
 		}
 
 		CvAssertMsg((0 < GC.getNumFeatureInfos()), "GC.getNumFeatureInfos() is not greater than zero but a float array is being allocated in CvUnit::reset");
@@ -821,10 +687,10 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 
 		for( int i = 0; i < GC.getNumFeatureInfos(); i++ )
 		{
-			m_featureDoubleMoveCount.setAt(i,0);
-			m_featureImpassableCount.setAt(i,0);
-			m_extraFeatureAttackPercent.setAt(i,0);
-			m_extraFeatureDefensePercent.setAt(i,0);
+			m_featureDoubleMoveCount[i] = 0;
+			m_featureImpassableCount[i] = 0;
+			m_extraFeatureAttackPercent[i] = 0;
+			m_extraFeatureDefensePercent[i] = 0;
 		}
 
 		CvAssertMsg((0 < GC.getNumUnitCombatClassInfos()), "GC.getNumUnitCombatClassInfos() is not greater than zero but an array is being allocated in CvUnit::reset");
@@ -832,7 +698,7 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 		m_extraUnitCombatModifier.resize( GC.getNumUnitCombatClassInfos() );
 		for( int i = 0; i < GC.getNumUnitCombatClassInfos(); i++ )
 		{
-			m_extraUnitCombatModifier.setAt(i,0);
+			m_extraUnitCombatModifier[i] = 0;
 		}
 
 		m_unitClassModifier.clear();
@@ -845,7 +711,7 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 				continue;
 			}
 
-			m_unitClassModifier.setAt(i,0);
+			m_unitClassModifier[i] =0;
 		}
 
 		// Migrated in from CvSelectionGroup
@@ -13523,7 +13389,7 @@ void CvUnit::changeTerrainDoubleMoveCount(TerrainTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumTerrainInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-	m_terrainDoubleMoveCount.setAt(eIndex, (m_terrainDoubleMoveCount[eIndex] + iChange));
+	m_terrainDoubleMoveCount[eIndex] = (m_terrainDoubleMoveCount[eIndex] + iChange);
 	CvAssert(getTerrainDoubleMoveCount(eIndex) >= 0);
 }
 
@@ -13554,7 +13420,7 @@ void CvUnit::changeFeatureDoubleMoveCount(FeatureTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumFeatureInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-	m_featureDoubleMoveCount.setAt(eIndex, m_featureDoubleMoveCount[eIndex] + iChange);
+	m_featureDoubleMoveCount[eIndex] = m_featureDoubleMoveCount[eIndex] + iChange;
 	CvAssert(getFeatureDoubleMoveCount(eIndex) >= 0);
 }
 
@@ -13602,7 +13468,7 @@ void CvUnit::changeTerrainImpassableCount(TerrainTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumTerrainInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-	m_terrainImpassableCount.setAt(eIndex, m_terrainImpassableCount[eIndex] + iChange);
+	m_terrainImpassableCount[eIndex] = m_terrainImpassableCount[eIndex] + iChange;
 	CvAssert(getTerrainImpassableCount(eIndex) >= 0);
 }
 
@@ -13622,7 +13488,7 @@ void CvUnit::changeFeatureImpassableCount(FeatureTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumFeatureInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-	m_featureImpassableCount.setAt(eIndex, m_featureImpassableCount[eIndex] + iChange);
+	m_featureImpassableCount[eIndex] = m_featureImpassableCount[eIndex] + iChange;
 	CvAssert(getFeatureImpassableCount(eIndex) >= 0);
 }
 
@@ -13645,7 +13511,7 @@ void CvUnit::changeExtraTerrainAttackPercent(TerrainTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_extraTerrainAttackPercent.setAt(eIndex, m_extraTerrainAttackPercent[eIndex] + iChange);
+		m_extraTerrainAttackPercent[eIndex] = m_extraTerrainAttackPercent[eIndex] + iChange;
 
 		setInfoBarDirty(true);
 	}
@@ -13670,7 +13536,7 @@ void CvUnit::changeExtraTerrainDefensePercent(TerrainTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_extraTerrainDefensePercent.setAt(eIndex, m_extraTerrainDefensePercent[eIndex] + iChange);
+		m_extraTerrainDefensePercent[eIndex] = m_extraTerrainDefensePercent[eIndex] + iChange;
 
 		setInfoBarDirty(true);
 	}
@@ -13695,7 +13561,7 @@ void CvUnit::changeExtraFeatureAttackPercent(FeatureTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_extraFeatureAttackPercent.setAt(eIndex, m_extraFeatureAttackPercent[eIndex] + iChange);
+		m_extraFeatureAttackPercent[eIndex] = m_extraFeatureAttackPercent[eIndex] + iChange;
 
 		setInfoBarDirty(true);
 	}
@@ -13720,7 +13586,7 @@ void CvUnit::changeExtraFeatureDefensePercent(FeatureTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_extraFeatureDefensePercent.setAt(eIndex, m_extraFeatureDefensePercent[eIndex] + iChange);
+		m_extraFeatureDefensePercent[eIndex] = m_extraFeatureDefensePercent[eIndex] + iChange;
 
 		setInfoBarDirty(true);
 	}
@@ -13742,7 +13608,7 @@ void CvUnit::changeExtraUnitCombatModifier(UnitCombatTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumUnitCombatClassInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-	m_extraUnitCombatModifier.setAt(eIndex, m_extraUnitCombatModifier[eIndex] + iChange);
+	m_extraUnitCombatModifier[eIndex] = m_extraUnitCombatModifier[eIndex] + iChange;
 }
 
 
@@ -13762,7 +13628,7 @@ void CvUnit::changeUnitClassModifier(UnitClassTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumUnitClassInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-	m_unitClassModifier.setAt(eIndex, m_unitClassModifier[eIndex] + iChange);
+	m_unitClassModifier[eIndex] = m_unitClassModifier[eIndex] + iChange;
 }
 
 
@@ -14271,9 +14137,9 @@ void CvUnit::read(FDataStream& kStream)
 	uint uiVersion;
 	kStream >> uiVersion;
 
-	// all FAutoVariables in the m_syncArchive will be read
-	// automagically, no need to explicitly load them here
-	kStream >> m_syncArchive;
+	//// all FAutoVariables in the m_syncArchive will be read
+	//// automagically, no need to explicitly load them here
+	//kStream >> m_syncArchive;
 
 	// anything not in m_syncArchive needs to be explicitly
 	// read
@@ -14399,7 +14265,7 @@ void CvUnit::write(FDataStream& kStream) const
 	uint uiVersion = 9;
 	kStream << uiVersion;
 
-	kStream << m_syncArchive;
+	//kStream << m_syncArchive;
 
 	// Write out a hash for the unit type, the sync archive saved the index, which is not a good thing to do.
 	if (m_eUnitType != NO_UNIT && m_pUnitInfo)
@@ -14897,19 +14763,19 @@ void CvUnit::SetPosition(CvPlot* pkPlot)
 	m_unitMoveLocs.clear();
 }
 
-//	--------------------------------------------------------------------------------
-const FAutoArchive & CvUnit::getSyncArchive() const
-{
-	VALIDATE_OBJECT
-	return m_syncArchive;
-}
-
-//	--------------------------------------------------------------------------------
-FAutoArchive & CvUnit::getSyncArchive()
-{
-	VALIDATE_OBJECT
-	return m_syncArchive;
-}
+////	--------------------------------------------------------------------------------
+//const FAutoArchive & CvUnit::getSyncArchive() const
+//{
+//	VALIDATE_OBJECT
+//	return m_syncArchive;
+//}
+//
+////	--------------------------------------------------------------------------------
+//FAutoArchive & CvUnit::getSyncArchive()
+//{
+//	VALIDATE_OBJECT
+//	return m_syncArchive;
+//}
 
 //	--------------------------------------------------------------------------------
 bool CvUnit::IsDoingPartialMove () const
@@ -17500,7 +17366,7 @@ std::string CvUnit::debugDump(const FAutoVariableBase & /*var*/) const
 std::string CvUnit::stackTraceRemark(const FAutoVariableBase & var) const
 {
 	std::string result = "Game Turn : ";
-	char gameTurnBuffer[8] = {0};
+	/*char gameTurnBuffer[8] = {0};
 	int gameTurn = GC.getGame().getGameTurn();
 	sprintf_s(gameTurnBuffer, "%d\0", gameTurn);
 	result += gameTurnBuffer;
@@ -17540,7 +17406,7 @@ std::string CvUnit::stackTraceRemark(const FAutoVariableBase & var) const
 				result += "some unknown check was added there but not here in the remark code\n";
 			}
 		}
-	}
+	}*/
 	return result;
 }
 

@@ -29,8 +29,10 @@
 //			The reason the Game Core data is not kept in sync is because the caching of all the data
 //			can take a significant amount of time.
 
-#define PREGAMEVARDEFAULT(a, b) FAutoVariable<a, Phony> b("CvPreGame::"#b, s_preGameArchive);
-#define PREGAMEVAR(a, b, c) FAutoVariable<a, Phony> b("CvPreGame::"#b, s_preGameArchive, c, false);
+//#define PREGAMEVARDEFAULT(a, b) FAutoVariable<a, Phony> b("CvPreGame::"#b, s_preGameArchive);
+//#define PREGAMEVAR(a, b, c) FAutoVariable<a, Phony> b("CvPreGame::"#b, s_preGameArchive, c, false);
+#define PREGAMEVARDEFAULT(a, b) a b;
+#define PREGAMEVAR(a, b, c) a b;
 
 
 //Basic translation function to help with the glue between the old
@@ -176,7 +178,7 @@ FDataStream & operator<<(FDataStream & stream, const CustomOption & option)
 	Phony phony;
 
 
-	FAutoArchiveClassContainer<Phony>                       s_preGameArchive         (phony);
+	//FAutoArchiveClassContainer<Phony>                       s_preGameArchive         (phony);
 
 	PREGAMEVAR         (PlayerTypes,                        s_activePlayer,           NO_PLAYER);
 	PREGAMEVARDEFAULT  (CvString,                           s_adminPassword);
@@ -778,11 +780,11 @@ void ReseatConnectedPlayers()
 
 	const CvClimateInfo & climateInfo()
 	{
-		if(s_climate != s_climateInfo.get().GetID())
+		if(s_climate != s_climateInfo.GetID())
 		{
 			Database::SingleResult kResult;
 			DB.SelectAt(kResult, "Climates", s_climate);
-			s_climateInfo.dirtyGet().CacheResult(kResult);
+			s_climateInfo.CacheResult(kResult);
 		}
 		return s_climateInfo;
 	}
@@ -1008,7 +1010,7 @@ void ReseatConnectedPlayers()
 			{
 				//I'd like to just set the value here, but that doesn't seem possible
 				//so instead, create a new CustomOption type and assign it to this index.
-				s_GameOptions.setAt(i, CustomOption(szOptionName, iValue));
+				s_GameOptions[i] = CustomOption(szOptionName, iValue);
 				SyncGameOptionsWithEnumList();
 				return true;
 			}
@@ -1517,7 +1519,7 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 			{
 				//I'd like to just set the value here, but that doesn't seem possible
 				//so instead, create a new CustomOption type and assign it to this index.
-				s_MapOptions.setAt(i, CustomOption(szOptionName, iValue));
+				s_MapOptions[i] = CustomOption(szOptionName, iValue);
 				return true;
 			}
 
@@ -1816,8 +1818,8 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 		loadFrom >> s_numMinorCivs;
 		if (uiVersion >= 2)
 		{
-			CvInfosSerializationHelper::ReadTypeArrayDBLookup<MinorCivTypes>(loadFrom, s_minorCivTypes.dirtyGet(), "MinorCivilizations");
-			s_minorCivTypes.clearDelta();
+			CvInfosSerializationHelper::ReadTypeArrayDBLookup<MinorCivTypes>(loadFrom, s_minorCivTypes, "MinorCivilizations");
+			// s_minorCivTypes.clearDelta();
 		}
 		else
 			loadFrom >> s_minorCivTypes;
@@ -1831,8 +1833,8 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 		loadFrom >> s_playableCivs;
 		if (uiVersion >= 2)
 		{
-			CvInfosSerializationHelper::ReadTypeArrayDBLookup<PlayerColorTypes>(loadFrom, s_playerColors.dirtyGet(), "PlayerColors");
-			s_playerColors.clearDelta();
+			CvInfosSerializationHelper::ReadTypeArrayDBLookup<PlayerColorTypes>(loadFrom, s_playerColors, "PlayerColors");
+			//s_playerColors.clearDelta();
 		}
 		else
 			loadFrom >> s_playerColors;
@@ -1934,7 +1936,7 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 		int i;
 		for (i = 0; i < NUM_MPOPTION_TYPES; ++i)
 		{
-			s_multiplayerOptions.setAt(i, false);
+			s_multiplayerOptions[i] = false;
 		}
 
 		//s_statReporting = false;
@@ -2220,11 +2222,11 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 
 	const CvSeaLevelInfo & seaLevelInfo()
 	{
-		if(s_seaLevel != s_seaLevelInfo.get().GetID())
+		if(s_seaLevel != s_seaLevelInfo.GetID())
 		{
 			Database::SingleResult kResult;
 			DB.SelectAt(kResult, "SeaLevels", s_seaLevel);
-			s_seaLevelInfo.dirtyGet().CacheResult(kResult);
+			s_seaLevelInfo.CacheResult(kResult);
 		}
 		return s_seaLevelInfo;
 	}
@@ -2252,7 +2254,7 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 	void setArtStyle(PlayerTypes p, ArtStyleTypes a)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_artStyles.setAt(p, a);
+			s_artStyles[p] = a;
 	}
 
 	void setAutorun(bool isEnabled)
@@ -2303,22 +2305,22 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 		{
 			CvAssertMsg(false, "Cannot find calendar info.");
 		}
-		s_calendarInfo.dirtyGet().CacheResult(kResult);
+		s_calendarInfo.CacheResult(kResult);
 
-		s_calendar = (CalendarTypes)s_calendarInfo.get().GetID();
+		s_calendar = (CalendarTypes)s_calendarInfo.GetID();
 	}
 
 	void setCivilization(PlayerTypes p, CivilizationTypes c)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
 		{
-			s_civilizations.setAt(p, c);
-
+			s_civilizations[p] = c;
+			
 			bool bFailed = bindCivilizationKeys(p);
 
 			if (bFailed)
 			{
-				s_civilizations.setAt(p, NO_CIVILIZATION);
+				s_civilizations[p] = NO_CIVILIZATION;
 				s_civilizationKeys[p].clear();
 				ClearGUID(s_civilizationPackageID[p]);
 				s_civilizationKeysAvailable[p] = true;	// If the key is empty, we assume the selection is in the 'random' state, so it is available.
@@ -2330,25 +2332,25 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 	void setCivilizationAdjective(PlayerTypes p, const CvString & a)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_civAdjectives.setAt(p, a);
+			s_civAdjectives[p] = a;
 	}
 
 	void setCivilizationDescription(PlayerTypes p, const CvString & d)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_civDescriptions.setAt(p, d);
+			s_civDescriptions[p] = d;
 	}
 
 	void setCivilizationPassword(PlayerTypes p, const CvString & pwd)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_civPasswords.setAt(p, pwd);
+			s_civPasswords[p] = pwd;
 	}
 
 	void setCivilizationShortDescription(PlayerTypes p, const CvString & d)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_civShortDescriptions.setAt(p, d);
+			s_civShortDescriptions[p] = d;
 	}
 
 	void setClimate(ClimateTypes c)
@@ -2361,9 +2363,9 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 		//Query
 		Database::SingleResult kResult;
 		DB.SelectAt(kResult, "Climates", "Type", c);
-		s_climateInfo.dirtyGet().CacheResult(kResult);
+		s_climateInfo.CacheResult(kResult);
 
-		s_climate = (ClimateTypes)s_climateInfo.get().GetID();
+		s_climate = (ClimateTypes)s_climateInfo.GetID();
 	}
 
 	void setCustomWorldSize(int iWidth, int iHeight, int iPlayers, int iMinorCivs)
@@ -2401,7 +2403,7 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 	void setEmailAddress(PlayerTypes p, const CvString & address)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_emailAddresses.setAt(p, address);
+			s_emailAddresses[p] = address;
 	}
 
 	void setEmailAddress(const CvString & address)
@@ -2555,8 +2557,8 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 void setHandicap(PlayerTypes p, HandicapTypes h)
 {
 	if(p >= 0 && p < MAX_PLAYERS){
-		s_handicaps.setAt(p, h);
-
+		s_handicaps[p] = h;
+		
 		if(slotStatus(p) == SS_TAKEN){
 			//Cache the handicap of human players.  
 			//We do this so we can recall the human handicap setting if the human player happens to disconnect and get replaced by an ai.
@@ -2568,7 +2570,7 @@ void setHandicap(PlayerTypes p, HandicapTypes h)
 void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 {
 	if(p >= 0 && p < MAX_PLAYERS){
-		s_lastHumanHandicaps.setAt(p, h);
+		s_lastHumanHandicaps[p] = h;
 	}
 }
 
@@ -2581,13 +2583,13 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
 		{
-			s_leaderHeads.setAt(p, l);
-
+			s_leaderHeads[p] = l;
+			
 			bool bFailed = bindLeaderKeys(p);
 
 			if (bFailed)
 			{
-				s_leaderHeads.setAt(p, NO_LEADER);
+				s_leaderHeads[p] = NO_LEADER;
 				s_leaderKeysAvailable[p] = true;	// If the key is empty, we assume the selection is in the 'random' state, so it is available.
 			}
 		}
@@ -2596,7 +2598,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 	void setLeaderName(PlayerTypes p, const CvString & n)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_leaderNames.setAt(p, n);
+			s_leaderNames[p] = n;
 	}
 
 	void setLeaderKey(PlayerTypes p, const CvString & szKey)
@@ -2619,7 +2621,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 						kResults.Bind(1, szKey.c_str());
 						if (kResults.Step())
 						{
-							s_leaderHeads.setAt(p, (LeaderHeadTypes)kResults.GetInt(0));
+							s_leaderHeads[p] = (LeaderHeadTypes)kResults.GetInt(0);
 							if (!ExtractGUID(kResults.GetText(1), s_leaderPackageID[p]))
 								ClearGUID(s_leaderPackageID[p]);
 							s_leaderKeysAvailable[p] = true;
@@ -2631,7 +2633,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 
 			if (bFailed)
 			{
-				s_leaderHeads.setAt(p, NO_LEADER);
+				s_leaderHeads[p] = NO_LEADER;
 				ClearGUID(s_leaderPackageID[p]);
 				s_leaderKeysAvailable[p] = (szKey.length() == 0);	// If the key was empty, then it is the 'random' state so it is available
 			}
@@ -2665,7 +2667,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 
 	void setLoadFileName(const CvString& f, StorageLocation eStorage)
 	{
-		if(s_loadFileName.get() != f)
+		if(s_loadFileName != f)
 		{
 			s_loadFileName = f;
 		}
@@ -2704,7 +2706,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 
 	void setMapScriptName(const CvString & s)
 	{
-		if(s_mapScriptName.get() != s)
+		if(s_mapScriptName != s)
 		{
 			s_mapScriptName = s;
 			ResetMapOptions();
@@ -2724,13 +2726,13 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 	void setMinorCivType(PlayerTypes p, MinorCivTypes m)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_minorCivTypes.setAt(p, m);
+			s_minorCivTypes[p] = m;
 	}
 
 	void setMinorCiv(PlayerTypes p, bool isMinor)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_minorNationCivs.setAt(p, isMinor);
+			s_minorNationCivs[p] = isMinor;
 	}
 
 	void setMultiplayerAIEnabled(bool enabled)
@@ -2741,7 +2743,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 	void setMultiplayerOption(MultiplayerOptionTypes o, bool enabled)
 	{
 		if(o >= 0 && o < NUM_MPOPTION_TYPES)
-			s_multiplayerOptions.setAt(o, enabled);
+			s_multiplayerOptions[o] = enabled;
 	}
 
 	void setMultiplayerOptions(const std::vector<bool> & mpOptions)
@@ -2757,7 +2759,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 	void setNetID(PlayerTypes p, int id)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_netIDs.setAt(p, id);
+			s_netIDs[p] = id;
 	}
 
 	void setNickname(PlayerTypes p, const CvString & n)
@@ -2776,7 +2778,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 				}
 			}
 			s_displayNicknames[p] = (CvString)_szName;
-			s_nicknames.setAt(p, n);
+			s_nicknames[p] = n;
 		}
 	}
 
@@ -2789,14 +2791,14 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
 		{
-			s_playableCivs.setAt(p, playable);
+			s_playableCivs[p] = playable;
 		}
 	}
 
 	void setPlayerColor(PlayerTypes p, PlayerColorTypes c)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_playerColors.setAt(p, c);
+			s_playerColors[p] = c;
 	}
 
 	void setPrivateGame(bool isPrivateGame)
@@ -2865,7 +2867,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 		if(p >= 0 && p < MAX_PLAYERS)
 		{
 			if (!bIsReady || p != activePlayer() || canReadyLocalPlayer())
-				s_readyPlayers.setAt(p, bIsReady);
+				s_readyPlayers[p] = bIsReady;
 		}
 	}
 
@@ -2879,21 +2881,21 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 		//Query
 		Database::SingleResult kResult;
 		DB.SelectAt(kResult, "SeaLevels", "Type", s.c_str());
-		s_seaLevelInfo.dirtyGet().CacheResult(kResult);
+		s_seaLevelInfo.CacheResult(kResult);
 
-		s_seaLevel = (SeaLevelTypes)s_seaLevelInfo.get().GetID();
+		s_seaLevel = (SeaLevelTypes)s_seaLevelInfo.GetID();
 	}
 
 	void setSlotClaim(PlayerTypes p, SlotClaim s)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_slotClaims.setAt(p, s);
+			s_slotClaims[p] = s;
 	}
 
 	void setSlotStatus(PlayerTypes p, SlotStatus eSlotStatus)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_slotStatus.setAt(p, eSlotStatus);
+			s_slotStatus[p] = eSlotStatus;
 	}
 
 	void setAllSlotStatus(const std::vector<SlotStatus> & vSlotStatus)
@@ -2914,7 +2916,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 	void setTeamType(PlayerTypes p, TeamTypes t)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_teamTypes.setAt(p, t);
+			s_teamTypes[p] = t;
 	}
 
 	void setTransferredMap(bool transferred)
@@ -2930,7 +2932,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 		{
 			CvAssertMsg(false, "Cannot find turn timer info.");
 		}
-		s_turnTimer.dirtyGet().CacheResult(kResult);
+		s_turnTimer.CacheResult(kResult);
 	}
 
 	void setTurnTimer(const CvString & t)
@@ -2940,9 +2942,9 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 		{
 			CvAssertMsg(false, "Cannot find turn timer info.");
 		}
-		s_turnTimer.dirtyGet().CacheResult(kResult);
+		s_turnTimer.CacheResult(kResult);
 
-		s_turnTimerType = (TurnTimerTypes)s_turnTimer.get().GetID();
+		s_turnTimerType = (TurnTimerTypes)s_turnTimer.GetID();
 	}
 
 	void SetCityScreenBlocked(bool bCityScreenBlocked)
@@ -2958,7 +2960,7 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 	void setVictory(VictoryTypes v, bool isValid)
 	{
 		if(v >= 0 && v < s_numVictoryInfos)
-			s_victories.setAt(v, isValid);
+			s_victories[v] = isValid;
 	}
 
 	void setVictories(const std::vector<bool> & v)
@@ -2970,25 +2972,25 @@ void setLastHumanHandicap(PlayerTypes p, HandicapTypes h)
 	void setWhiteFlag(PlayerTypes p, bool flag)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_whiteFlags.setAt(p, flag);
+			s_whiteFlags[p] = flag;
 	}
 
 	void setTurnNotifySteamInvite(PlayerTypes p, bool flag)
 	{
 		if(p >= 0 && p < MAX_PLAYERS)
-			s_turnNotifySteamInvite.setAt(p, flag);
+			s_turnNotifySteamInvite[p] = flag;
 	}
 
 void setTurnNotifyEmail(PlayerTypes p, bool flag)
 {
 	if(p >= 0 && p < MAX_PLAYERS)
-		s_turnNotifyEmail.setAt(p, flag);
+		s_turnNotifyEmail[p] = flag;
 }
 
 void setTurnNotifyEmailAddress(PlayerTypes p, const CvString& emailAddress)
 {
 	if(p >= 0 && p < MAX_PLAYERS)
-		s_turnNotifyEmailAddress.setAt(p, emailAddress);
+		s_turnNotifyEmailAddress[p] = emailAddress;
 }
 
 void VerifyHandicap(PlayerTypes p)
@@ -3022,7 +3024,7 @@ void VerifyHandicap(PlayerTypes p)
 
 		if(kQuery.Step())
 		{
-			s_worldInfo.dirtyGet().CacheResult(kQuery);
+			s_worldInfo.CacheResult(kQuery);
 			s_worldSize = w;
 			if (bResetSlots)
 				resetSlots();
@@ -3045,8 +3047,8 @@ void VerifyHandicap(PlayerTypes p)
 
 		if(kQuery.Step())
 		{
-			s_worldInfo.dirtyGet().CacheResult(kQuery);
-			s_worldSize = (WorldSizeTypes)s_worldInfo.get().GetID();
+			s_worldInfo.CacheResult(kQuery);
+			s_worldSize = (WorldSizeTypes)s_worldInfo.GetID();
 			resetSlots();
 		}
 		else
@@ -3125,11 +3127,11 @@ void VerifyHandicap(PlayerTypes p)
 
 	const CvWorldInfo & worldInfo()
 	{
-		if(s_worldSize != s_worldInfo.get().GetID())
+		if(s_worldSize != s_worldInfo.GetID())
 		{
 			Database::SingleResult kResult;
 			DB.SelectAt(kResult, "Worlds", s_worldSize);
-			s_worldInfo.dirtyGet().CacheResult(kResult);
+			s_worldInfo.CacheResult(kResult);
 		}
 		return s_worldInfo;
 	}
@@ -3366,7 +3368,7 @@ void VerifyHandicap(PlayerTypes p)
 						kResults.Bind(1, szKey.c_str());
 						if (kResults.Step())
 						{
-							s_civilizations.setAt(p, (CivilizationTypes)kResults.GetInt(0));
+							s_civilizations[p] = (CivilizationTypes)kResults.GetInt(0);
 							if (!ExtractGUID(kResults.GetText(1), s_civilizationPackageID[p]))
 								ClearGUID(s_civilizationPackageID[p]);
 							s_civilizationKeysAvailable[p] = true;
@@ -3379,7 +3381,7 @@ void VerifyHandicap(PlayerTypes p)
 
 			if (bFailed)
 			{
-				s_civilizations.setAt(p, NO_CIVILIZATION);
+				s_civilizations[p] = NO_CIVILIZATION;
 				ClearGUID(s_civilizationPackageID[p]);
 				s_civilizationKeysAvailable[p] = (szKey.length() == 0);	// If the key was empty, then it is the 'random' state so it is available
 				s_civilizationKeysPlayable[p] = s_civilizationKeysAvailable[p];

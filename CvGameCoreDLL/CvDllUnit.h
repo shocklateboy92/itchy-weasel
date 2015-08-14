@@ -89,7 +89,7 @@ public:
 	bool DLLCALL CanWork() const;
 	bool DLLCALL CanFound() const;
 
-	FAutoArchive& DLLCALL GetSyncArchive();
+	//FAutoArchive& DLLCALL GetSyncArchive();
 
 private:
 	void DLLCALL Destroy();

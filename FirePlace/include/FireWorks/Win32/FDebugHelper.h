@@ -47,73 +47,73 @@ typedef USHORT (WINAPI *CaptureStackBackTraceFuncType)(__in ULONG, __in ULONG, _
 // In order for any of the functions to return meaningful information, FDebugHelper must be able to find
 // the .pdb files that were created when the executable and libraries were built.
 //
+//
+//class FCallStack;
+//class FMiniDumper;
+//
+//class FDebugHelper
+//{
+//public:
+//	static FDebugHelper& GetInstance();
+//	static FDebugHelper* GetCurrentInstance() { return pInstance; };
+//
+//	//	Load in the symbols for the current process.
+//	bool LoadSymbols();
+//	//	Load in the symbols for the specified module.  Usually called for a delay-loaded DLL.
+//	bool LoadSymbols(HMODULE hModule);
+//	void UnloadSymbols(HMODULE hModule);
+//
+//	bool GetSymbolName( DWORD64 dwAddress, TCHAR* name, unsigned int maxNameLength );
+//	bool GetSymbolName( const CONTEXT& context, TCHAR* name, unsigned int maxNameLength );
+//
+//	bool GetSymbolFileLine( DWORD64 dwAddress, TCHAR* name, DWORD* pLineNumber, unsigned int maxNameLength );
+//	bool GetSymbolFileLine( const CONTEXT& context, TCHAR* name, DWORD* pLineNumber, unsigned int maxNameLength );
+//
+//	bool GetModuleName( DWORD64 dwAddress, TCHAR* name, unsigned int maxNameLength );
+//
+//	/**	Get the call stack, this will not include the call to this method.
+//		@param	iStrip		number of levels to strip off the top of the stack.  This is
+//							used to remove entries to the debugging point so that only relevant
+//							entries are displayed or tracked.
+//		@param	iDepth		limit the call stack depth, used to cut down on memory usage during
+//							debug sessions.  0 = full call stack. */
+//	bool GetCallStack(FCallStack *pCallStack, int iStrip = 0, int iDepth = 0);
+//
+//	template< class Function > void WalkStack( const CONTEXT& context, Function Func );
+//
+//	// This function is registered with atexit to destroy our singleton
+//	static void DestroyDebugHelper();	// allow manual usage as public fxn
+//
+//	typedef void (*ExceptCallback)(TCHAR* szExceptionText);
+//	void SetExceptionTextCB(ExceptCallback pCB) { m_pExceptionTextCB = pCB; }
+//	const ExceptCallback GetExceptionTextCB() const { return m_pExceptionTextCB; } 
+//
+//	// Get our instance of the mini dumper.  Can be NULL before initialization of FDebugHelper.
+//#if !defined( FINAL_RELEASE )
+//	static FMiniDumper*	GetMiniDumper();
+//#endif
+//
+//	// Waits for a debugger to be attached until execution (on this thread) continues.
+//	static void WaitForDebuggerAttachment(bool bShowWindow = true);
+//
+//private:
+//	// private/disabled constructors / destructors / assignment
+//	FDebugHelper();
+//	~FDebugHelper();
+//	FDebugHelper( const FDebugHelper& );
+//	const FDebugHelper& operator=( const FDebugHelper& );
+//
+//	static FDebugHelper* pInstance;
+//
+//	HANDLE hCurrentProcess;
+//	ExceptCallback m_pExceptionTextCB;		// optional callback function on exception catching (see FDebugHelperNS)
+//
+//#ifdef USE_RTL_CAPTURE_STACK
+//	CaptureStackBackTraceFuncType m_pkCaptureStackBackTrace;
+//#endif
+//
+//};
 
-class FCallStack;
-class FMiniDumper;
-
-class FDebugHelper
-{
-public:
-	static FDebugHelper& GetInstance();
-	static FDebugHelper* GetCurrentInstance() { return pInstance; };
-
-	//	Load in the symbols for the current process.
-	bool LoadSymbols();
-	//	Load in the symbols for the specified module.  Usually called for a delay-loaded DLL.
-	bool LoadSymbols(HMODULE hModule);
-	void UnloadSymbols(HMODULE hModule);
-
-	bool GetSymbolName( DWORD64 dwAddress, TCHAR* name, unsigned int maxNameLength );
-	bool GetSymbolName( const CONTEXT& context, TCHAR* name, unsigned int maxNameLength );
-
-	bool GetSymbolFileLine( DWORD64 dwAddress, TCHAR* name, DWORD* pLineNumber, unsigned int maxNameLength );
-	bool GetSymbolFileLine( const CONTEXT& context, TCHAR* name, DWORD* pLineNumber, unsigned int maxNameLength );
-
-	bool GetModuleName( DWORD64 dwAddress, TCHAR* name, unsigned int maxNameLength );
-
-	/**	Get the call stack, this will not include the call to this method.
-		@param	iStrip		number of levels to strip off the top of the stack.  This is
-							used to remove entries to the debugging point so that only relevant
-							entries are displayed or tracked.
-		@param	iDepth		limit the call stack depth, used to cut down on memory usage during
-							debug sessions.  0 = full call stack. */
-	bool GetCallStack(FCallStack *pCallStack, int iStrip = 0, int iDepth = 0);
-
-	template< class Function > void WalkStack( const CONTEXT& context, Function Func );
-
-	// This function is registered with atexit to destroy our singleton
-	static void DestroyDebugHelper();	// allow manual usage as public fxn
-
-	typedef void (*ExceptCallback)(TCHAR* szExceptionText);
-	void SetExceptionTextCB(ExceptCallback pCB) { m_pExceptionTextCB = pCB; }
-	const ExceptCallback GetExceptionTextCB() const { return m_pExceptionTextCB; } 
-
-	// Get our instance of the mini dumper.  Can be NULL before initialization of FDebugHelper.
-#if !defined( FINAL_RELEASE )
-	static FMiniDumper*	GetMiniDumper();
-#endif
-
-	// Waits for a debugger to be attached until execution (on this thread) continues.
-	static void WaitForDebuggerAttachment(bool bShowWindow = true);
-
-private:
-	// private/disabled constructors / destructors / assignment
-	FDebugHelper();
-	~FDebugHelper();
-	FDebugHelper( const FDebugHelper& );
-	const FDebugHelper& operator=( const FDebugHelper& );
-
-	static FDebugHelper* pInstance;
-
-	HANDLE hCurrentProcess;
-	ExceptCallback m_pExceptionTextCB;		// optional callback function on exception catching (see FDebugHelperNS)
-
-#ifdef USE_RTL_CAPTURE_STACK
-	CaptureStackBackTraceFuncType m_pkCaptureStackBackTrace;
-#endif
-
-};
-
-#include "FDebugHelper.inl"
+//#include "FDebugHelper.inl"
 
 #endif // FDEBUGHELPER_H

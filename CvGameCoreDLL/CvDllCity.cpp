@@ -200,9 +200,9 @@ ICvPlot1* CvDllCity::GetCityPlotFromIndex(int iIndex) const
 	CvPlot* pkPlot = m_pCity->GetCityCitizens()->GetCityPlotFromIndex(iIndex);
 	return (NULL != pkPlot)? new CvDllPlot(pkPlot) : NULL;
 }
-//------------------------------------------------------------------------------
-FAutoArchive& CvDllCity::GetSyncArchive()
-{
-	return m_pCity->getSyncArchive();
-}
+////------------------------------------------------------------------------------
+//FAutoArchive& CvDllCity::GetSyncArchive()
+//{
+//	return m_pCity->getSyncArchive();
+//}
 //------------------------------------------------------------------------------

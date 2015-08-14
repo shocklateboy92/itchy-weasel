@@ -60,7 +60,7 @@ public:
 	bool DLLCALL CanWork(ICvPlot1* pPlot) const;
 	ICvPlot1* DLLCALL GetCityPlotFromIndex(int iIndex) const;
 
-	FAutoArchive& DLLCALL GetSyncArchive();
+	//FAutoArchive& DLLCALL GetSyncArchive();
 
 private:
 	void DLLCALL Destroy();

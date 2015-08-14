@@ -25,8 +25,10 @@ using FLua::Table;
 void CvLuaGameInfo::Register(lua_State* L)
 {
  	//Register other game info structures.
- 	Lua::CCallWithErrorHandling(L, pRegisterActions);
- 	Lua::CCallWithErrorHandling(L, pRegisterTypesInfo);
+ 	//Lua::CCallWithErrorHandling(L, pRegisterActions);
+	pRegisterActions(L);
+ 	//Lua::CCallWithErrorHandling(L, pRegisterTypesInfo);
+	pRegisterTypesInfo(L);
 }
 
 //------------------------------------------------------------------------------

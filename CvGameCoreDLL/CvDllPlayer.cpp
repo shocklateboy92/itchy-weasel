@@ -351,11 +351,11 @@ void CvDllPlayer::Write(FDataStream& kStream) const
 {
 	m_pPlayer->Write(kStream);
 }
-//------------------------------------------------------------------------------
-FAutoArchive& CvDllPlayer::GetSyncArchive()
-{
-	return m_pPlayer->getSyncArchive();
-}
+////------------------------------------------------------------------------------
+//FAutoArchive& CvDllPlayer::GetSyncArchive()
+//{
+//	return m_pPlayer->getSyncArchive();
+//}
 //------------------------------------------------------------------------------
 int CvDllPlayer::GetGold() const
 {

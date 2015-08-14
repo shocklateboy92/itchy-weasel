@@ -66,7 +66,8 @@ int GetFractalFlags(lua_State* L, int idx)
 //------------------------------------------------------------------------------
 void CvLuaFractal::Register(lua_State* L)
 {
-	FLua::Details::CCallWithErrorHandling(L, pRegister);
+	pRegister(L);
+	//FLua::Details::CCallWithErrorHandling(L, pRegister);
 }
 //-----------------------------------------------------------------------------------
 int CvLuaFractal::pRegister(lua_State* L)

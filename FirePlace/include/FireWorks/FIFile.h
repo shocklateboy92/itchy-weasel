@@ -119,22 +119,22 @@ protected:
 	FIFile& operator=( const FIFile& obj );
 };
 
-/*	An encapsulation of an FIFile class that allows for auto creation and destruction.
-	Use this where you used to use the FFile class.  This allows the file system implementation code
-	to be hidden which is helpful when using with a DLL. 
-	Use the -> or * operator to dereference the internal FIFile object. */
-class FFileInstance
-{
-	FIFile* m_pkFile;
-public:
-	~FFileInstance();
-	FFileInstance( const  char*  szFileName = NULL, FIFile::OpenMode eOpenMode = FIFile::modeRead, dword dwFlags = FFILE_FLAG_DEFAULT, uint uiBufferSize = FFILE_DEFAULT_BUFFER_SIZE );
-	FFileInstance( const wchar* wszFileName       , FIFile::OpenMode eOpenMode = FIFile::modeRead, dword dwFlags = FFILE_FLAG_DEFAULT, uint uiBufferSize = FFILE_DEFAULT_BUFFER_SIZE );
-
-	// Access the FIFile object
-	FIFile& operator*() { return *m_pkFile; }
-	FIFile* operator->() { return m_pkFile; }
-};
+///*	an encapsulation of an fifile class that allows for auto creation and destruction.
+//	use this where you used to use the ffile class.  this allows the file system implementation code
+//	to be hidden which is helpful when using with a dll. 
+//	use the -> or * operator to dereference the internal fifile object. */
+//class ffileinstance
+//{
+//	fifile* m_pkfile;
+//public:
+//	~ffileinstance();
+//	ffileinstance( const  char*  szfilename = null, fifile::openmode eopenmode = fifile::moderead, dword dwflags = ffile_flag_default, uint uibuffersize = ffile_default_buffer_size );
+//	ffileinstance( const wchar* wszfilename       , fifile::openmode eopenmode = fifile::moderead, dword dwflags = ffile_flag_default, uint uibuffersize = ffile_default_buffer_size );
+//
+//	// access the fifile object
+//	fifile& operator*() { return *m_pkfile; }
+//	fifile* operator->() { return m_pkfile; }
+//};
 
 /*	Interface class for file system operations, including the creation of a file access object */
 class FIFileSystem

@@ -525,12 +525,12 @@ public:
 
 	inline int getX() const
 	{
-		return m_iX.get();
+		return m_iX;
 	}
 
 	inline int getY() const
 	{
-		return m_iY.get();
+		return m_iY;
 	}
 
 	void setXY(int iX, int iY, bool bGroup = false, bool bUpdate = true, bool bShow = false, bool bCheckPlotVisible = false, bool bNoMove = false);
@@ -826,7 +826,7 @@ public:
 
 	inline PlayerTypes getOwner() const
 	{
-		return m_eOwner.get();
+		return m_eOwner;
 	}
 
 	PlayerTypes getVisualOwner(TeamTypes eForTeam = NO_TEAM) const;
@@ -983,8 +983,8 @@ public:
 
 	void SetPosition( CvPlot * pkPlot );
 
-	const FAutoArchive & getSyncArchive() const;
-	FAutoArchive & getSyncArchive();
+	//const FAutoArchive & getSyncArchive() const;
+	//FAutoArchive & getSyncArchive();
 
 	// Mission routines
 	void PushMission(MissionTypes eMission, int iData1 = -1, int iData2 = -1, int iFlags = 0, bool bAppend = false, bool bManual = false, MissionAITypes eMissionAI = NO_MISSIONAI, CvPlot* pMissionAIPlot = NULL, CvUnit* pMissionAIUnit = NULL);
@@ -1076,148 +1076,148 @@ protected:
 		UNITFLAG_ALREADY_GOT_GOODY_UPGRADE = 0x2
 	};
 
-	FAutoArchiveClassContainer<CvUnit> m_syncArchive;
+	//FAutoArchiveClassContainer<CvUnit> m_syncArchive;
 
-	FAutoVariable<PlayerTypes, CvUnit> m_eOwner;
-	FAutoVariable<PlayerTypes, CvUnit> m_eOriginalOwner;
-	FAutoVariable<UnitTypes, CvUnit> m_eUnitType;
-	FAutoVariable<int, CvUnit> m_iX;
-	FAutoVariable<int, CvUnit> m_iY;
-	FAutoVariable<int, CvUnit> m_iID;
+	PlayerTypes m_eOwner;
+	PlayerTypes m_eOriginalOwner;
+	UnitTypes m_eUnitType;
+	int m_iX;
+	int m_iY;
+	int m_iID;
 
-	FAutoVariable<int, CvUnit> m_iHotKeyNumber;
-	FAutoVariable<int, CvUnit> m_iDeployFromOperationTurn;
+	int m_iHotKeyNumber;
+	int m_iDeployFromOperationTurn;
 	int m_iLastMoveTurn;
 	short m_iCycleOrder;
-	FAutoVariable<int, CvUnit> m_iReconX;
-	FAutoVariable<int, CvUnit> m_iReconY;
-	FAutoVariable<int, CvUnit> m_iReconCount;
-	FAutoVariable<int, CvUnit> m_iGameTurnCreated;
-	FAutoVariable<int, CvUnit> m_iDamage;
-	FAutoVariable<int, CvUnit> m_iMoves;
-	FAutoVariable<bool, CvUnit> m_bImmobile;
-	FAutoVariable<int, CvUnit> m_iExperience;
-	FAutoVariable<int, CvUnit> m_iLevel;
-	FAutoVariable<int, CvUnit> m_iCargo;
-	FAutoVariable<int, CvUnit> m_iCargoCapacity;
-	FAutoVariable<int, CvUnit> m_iAttackPlotX;
-	FAutoVariable<int, CvUnit> m_iAttackPlotY;
-	FAutoVariable<int, CvUnit> m_iCombatTimer;
-	FAutoVariable<int, CvUnit> m_iCombatFirstStrikes;
-	FAutoVariable<int, CvUnit> m_iCombatDamage;
-	FAutoVariable<int, CvUnit> m_iFortifyTurns;
-	FAutoVariable<bool, CvUnit> m_bFortifiedThisTurn;
-	FAutoVariable<int, CvUnit> m_iBlitzCount;
-	FAutoVariable<int, CvUnit> m_iAmphibCount;
-	FAutoVariable<int, CvUnit> m_iRiverCrossingNoPenaltyCount;
-	FAutoVariable<int, CvUnit> m_iEnemyRouteCount;
-	FAutoVariable<int, CvUnit> m_iRivalTerritoryCount;
-	FAutoVariable<int, CvUnit> m_iMustSetUpToRangedAttackCount;
-	FAutoVariable<int, CvUnit> m_iRangeAttackIgnoreLOSCount;
-	FAutoVariable<int, CvUnit> m_iRangedSupportFireCount;
-	FAutoVariable<int, CvUnit> m_iAlwaysHealCount;
-	FAutoVariable<int, CvUnit> m_iHealOutsideFriendlyCount;
-	FAutoVariable<int, CvUnit> m_iHillsDoubleMoveCount;
-	FAutoVariable<int, CvUnit> m_iImmuneToFirstStrikesCount;
-	FAutoVariable<int, CvUnit> m_iExtraVisibilityRange;
-	FAutoVariable<int, CvUnit> m_iExtraMoves;
-	FAutoVariable<int, CvUnit> m_iExtraMoveDiscount;
-	FAutoVariable<int, CvUnit> m_iExtraRange;
-	FAutoVariable<int, CvUnit> m_iExtraIntercept;
-	FAutoVariable<int, CvUnit> m_iExtraEvasion;
-	FAutoVariable<int, CvUnit> m_iExtraFirstStrikes;
-	FAutoVariable<int, CvUnit> m_iExtraChanceFirstStrikes;
-	FAutoVariable<int, CvUnit> m_iExtraWithdrawal;
-	FAutoVariable<int, CvUnit> m_iExtraEnemyHeal;
-	FAutoVariable<int, CvUnit> m_iExtraNeutralHeal;
-	FAutoVariable<int, CvUnit> m_iExtraFriendlyHeal;
+	int m_iReconX;
+	int m_iReconY;
+	int m_iReconCount;
+	int m_iGameTurnCreated;
+	int m_iDamage;
+	int m_iMoves;
+	bool m_bImmobile;
+	int m_iExperience;
+	int m_iLevel;
+	int m_iCargo;
+	int m_iCargoCapacity;
+	int m_iAttackPlotX;
+	int m_iAttackPlotY;
+	int m_iCombatTimer;
+	int m_iCombatFirstStrikes;
+	int m_iCombatDamage;
+	int m_iFortifyTurns;
+	bool m_bFortifiedThisTurn;
+	int m_iBlitzCount;
+	int m_iAmphibCount;
+	int m_iRiverCrossingNoPenaltyCount;
+	int m_iEnemyRouteCount;
+	int m_iRivalTerritoryCount;
+	int m_iMustSetUpToRangedAttackCount;
+	int m_iRangeAttackIgnoreLOSCount;
+	int m_iRangedSupportFireCount;
+	int m_iAlwaysHealCount;
+	int m_iHealOutsideFriendlyCount;
+	int m_iHillsDoubleMoveCount;
+	int m_iImmuneToFirstStrikesCount;
+	int m_iExtraVisibilityRange;
+	int m_iExtraMoves;
+	int m_iExtraMoveDiscount;
+	int m_iExtraRange;
+	int m_iExtraIntercept;
+	int m_iExtraEvasion;
+	int m_iExtraFirstStrikes;
+	int m_iExtraChanceFirstStrikes;
+	int m_iExtraWithdrawal;
+	int m_iExtraEnemyHeal;
+	int m_iExtraNeutralHeal;
+	int m_iExtraFriendlyHeal;
 	int m_iEnemyDamageChance;
 	int m_iNeutralDamageChance;
 	int m_iNearbyEnemyCombatMod;
 	int m_iNearbyEnemyCombatRange;
-	FAutoVariable<int, CvUnit> m_iSameTileHeal;
-	FAutoVariable<int, CvUnit> m_iAdjacentTileHeal;
-	FAutoVariable<int, CvUnit> m_iAdjacentModifier;
-	FAutoVariable<int, CvUnit> m_iRangedAttackModifier;
-	FAutoVariable<int, CvUnit> m_iInterceptionCombatModifier;
-	FAutoVariable<int, CvUnit> m_iInterceptionDefenseDamageModifier;
-	FAutoVariable<int, CvUnit> m_iAirSweepCombatModifier;
-	FAutoVariable<int, CvUnit> m_iAttackModifier;
-	FAutoVariable<int, CvUnit> m_iDefenseModifier;
-	FAutoVariable<int, CvUnit> m_iExtraCombatPercent;
-	FAutoVariable<int, CvUnit> m_iExtraCityAttackPercent;
-	FAutoVariable<int, CvUnit> m_iExtraCityDefensePercent;
-	FAutoVariable<int, CvUnit> m_iExtraRangedDefenseModifier;
-	FAutoVariable<int, CvUnit> m_iExtraHillsAttackPercent;
-	FAutoVariable<int, CvUnit> m_iExtraHillsDefensePercent;
-	FAutoVariable<int, CvUnit> m_iExtraOpenAttackPercent;
-	FAutoVariable<int, CvUnit> m_iExtraOpenRangedAttackMod;
-	FAutoVariable<int, CvUnit> m_iExtraRoughAttackPercent;
-	FAutoVariable<int, CvUnit> m_iExtraRoughRangedAttackMod;
-	FAutoVariable<int, CvUnit> m_iExtraAttackFortifiedMod;
-	FAutoVariable<int, CvUnit> m_iExtraAttackWoundedMod;
-	FAutoVariable<int, CvUnit> m_iExtraOpenDefensePercent;
-	FAutoVariable<int, CvUnit> m_iExtraRoughDefensePercent;
-	FAutoVariable<int, CvUnit> m_iPillageChange;
-	FAutoVariable<int, CvUnit> m_iUpgradeDiscount;
-	FAutoVariable<int, CvUnit> m_iExperiencePercent;
-	FAutoVariable<int, CvUnit> m_iDropRange;
-	FAutoVariable<int, CvUnit> m_iAirSweepCapableCount;
-	FAutoVariable<int, CvUnit> m_iExtraNavalMoves;
-	FAutoVariable<int, CvUnit> m_iKamikazePercent;
-	FAutoVariable<int, CvUnit> m_iBaseCombat;
-	FAutoVariable<DirectionTypes, CvUnit> m_eFacingDirection;
-	FAutoVariable<int, CvUnit> m_iArmyId;
+	int m_iSameTileHeal;
+	int m_iAdjacentTileHeal;
+	int m_iAdjacentModifier;
+	int m_iRangedAttackModifier;
+	int m_iInterceptionCombatModifier;
+	int m_iInterceptionDefenseDamageModifier;
+	int m_iAirSweepCombatModifier;
+	int m_iAttackModifier;
+	int m_iDefenseModifier;
+	int m_iExtraCombatPercent;
+	int m_iExtraCityAttackPercent;
+	int m_iExtraCityDefensePercent;
+	int m_iExtraRangedDefenseModifier;
+	int m_iExtraHillsAttackPercent;
+	int m_iExtraHillsDefensePercent;
+	int m_iExtraOpenAttackPercent;
+	int m_iExtraOpenRangedAttackMod;
+	int m_iExtraRoughAttackPercent;
+	int m_iExtraRoughRangedAttackMod;
+	int m_iExtraAttackFortifiedMod;
+	int m_iExtraAttackWoundedMod;
+	int m_iExtraOpenDefensePercent;
+	int m_iExtraRoughDefensePercent;
+	int m_iPillageChange;
+	int m_iUpgradeDiscount;
+	int m_iExperiencePercent;
+	int m_iDropRange;
+	int m_iAirSweepCapableCount;
+	int m_iExtraNavalMoves;
+	int m_iKamikazePercent;
+	int m_iBaseCombat;
+	DirectionTypes m_eFacingDirection;
+	int m_iArmyId;
 
-	FAutoVariable<int, CvUnit> m_iIgnoreTerrainCostCount;
-	FAutoVariable<int, CvUnit> m_iRoughTerrainEndsTurnCount;
-	FAutoVariable<int, CvUnit> m_iEmbarkAbilityCount;
-	FAutoVariable<int, CvUnit> m_iHoveringUnitCount;
-	FAutoVariable<int, CvUnit> m_iFlatMovementCostCount;
-	FAutoVariable<int, CvUnit> m_iCanMoveImpassableCount;
-	FAutoVariable<int, CvUnit> m_iOnlyDefensiveCount;
-	FAutoVariable<int, CvUnit> m_iNoDefensiveBonusCount;
-	FAutoVariable<int, CvUnit> m_iNoCaptureCount;
-	FAutoVariable<int, CvUnit> m_iNukeImmuneCount;
-	FAutoVariable<int, CvUnit> m_iHiddenNationalityCount;
-	FAutoVariable<int, CvUnit> m_iAlwaysHostileCount;
-	FAutoVariable<int, CvUnit> m_iNoRevealMapCount;
-	FAutoVariable<int, CvUnit> m_iCanMoveAllTerrainCount;
-	FAutoVariable<int, CvUnit> m_iCanMoveAfterAttackingCount;
-	FAutoVariable<int, CvUnit> m_iFreePillageMoveCount;
-	FAutoVariable<int, CvUnit> m_iHPHealedIfDefeatEnemy;
-	FAutoVariable<int, CvUnit> m_iTacticalAIPlotX;
-	FAutoVariable<int, CvUnit> m_iTacticalAIPlotY;
-	FAutoVariable<int, CvUnit> m_iGarrisonCityID;
-	FAutoVariable<int, CvUnit> m_iFlags;
-	FAutoVariable<int, CvUnit> m_iNumAttacks;
-	FAutoVariable<int, CvUnit> m_iAttacksMade;
-	FAutoVariable<int, CvUnit> m_iGreatGeneralCount;
-	FAutoVariable<int, CvUnit> m_iGreatGeneralModifier;
-	FAutoVariable<int, CvUnit> m_iFriendlyLandsModifier;
-	FAutoVariable<int, CvUnit> m_iFriendlyLandsAttackModifier;
-	FAutoVariable<int, CvUnit> m_iOutsideFriendlyLandsModifier;
-	FAutoVariable<int, CvUnit> m_iHealIfDefeatExcludeBarbariansCount;
-	FAutoVariable<int, CvUnit> m_iNumInterceptions;
-	FAutoVariable<int, CvUnit> m_iMadeInterceptionCount;
+	int m_iIgnoreTerrainCostCount;
+	int m_iRoughTerrainEndsTurnCount;
+	int m_iEmbarkAbilityCount;
+	int m_iHoveringUnitCount;
+	int m_iFlatMovementCostCount;
+	int m_iCanMoveImpassableCount;
+	int m_iOnlyDefensiveCount;
+	int m_iNoDefensiveBonusCount;
+	int m_iNoCaptureCount;
+	int m_iNukeImmuneCount;
+	int m_iHiddenNationalityCount;
+	int m_iAlwaysHostileCount;
+	int m_iNoRevealMapCount;
+	int m_iCanMoveAllTerrainCount;
+	int m_iCanMoveAfterAttackingCount;
+	int m_iFreePillageMoveCount;
+	int m_iHPHealedIfDefeatEnemy;
+	int m_iTacticalAIPlotX;
+	int m_iTacticalAIPlotY;
+	int m_iGarrisonCityID;
+	int m_iFlags;
+	int m_iNumAttacks;
+	int m_iAttacksMade;
+	int m_iGreatGeneralCount;
+	int m_iGreatGeneralModifier;
+	int m_iFriendlyLandsModifier;
+	int m_iFriendlyLandsAttackModifier;
+	int m_iOutsideFriendlyLandsModifier;
+	int m_iHealIfDefeatExcludeBarbariansCount;
+	int m_iNumInterceptions;
+	int m_iMadeInterceptionCount;
 	int m_iEverSelectedCount;
 
-	FAutoVariable<bool, CvUnit> m_bPromotionReady;
-	FAutoVariable<bool, CvUnit> m_bDeathDelay;
-	FAutoVariable<bool, CvUnit> m_bCombatFocus;
-	FAutoVariable<bool, CvUnit> m_bInfoBarDirty;
-	FAutoVariable<bool, CvUnit> m_bNotConverting;
-	FAutoVariable<bool, CvUnit> m_bAirCombat;
-	FAutoVariable<bool, CvUnit> m_bSetUpForRangedAttack;
-	FAutoVariable<bool, CvUnit> m_bEmbarked;
-	FAutoVariable<bool, CvUnit> m_bAITurnProcessed;
+	bool m_bPromotionReady;
+	bool m_bDeathDelay;
+	bool m_bCombatFocus;
+	bool m_bInfoBarDirty;
+	bool m_bNotConverting;
+	bool m_bAirCombat;
+	bool m_bSetUpForRangedAttack;
+	bool m_bEmbarked;
+	bool m_bAITurnProcessed;
 
-	FAutoVariable<TacticalAIMoveTypes, CvUnit> m_eTacticalMove;
-	FAutoVariable<PlayerTypes, CvUnit> m_eCapturingPlayer;
-	FAutoVariable<UnitTypes, CvUnit> m_eLeaderUnitType;
-	FAutoVariable<InvisibleTypes, CvUnit> m_eInvisibleType;
-	FAutoVariable<InvisibleTypes, CvUnit> m_eSeeInvisibleType;
-	FAutoVariable<GreatPeopleDirectiveTypes, CvUnit> m_eGreatPeopleDirectiveType;
+	TacticalAIMoveTypes m_eTacticalMove;
+	PlayerTypes m_eCapturingPlayer;
+	UnitTypes m_eLeaderUnitType;
+	InvisibleTypes m_eInvisibleType;
+	InvisibleTypes m_eSeeInvisibleType;
+	GreatPeopleDirectiveTypes m_eGreatPeopleDirectiveType;
 	CvUnitEntry *m_pUnitInfo;
 
 	bool m_bWaitingForMove;			///< If true, the unit is busy visualizing its move.
@@ -1228,30 +1228,30 @@ protected:
 
 	std::vector<int> m_extraDomainModifiers;
 
-	FAutoVariable<CvString, CvUnit> m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility;
-	FAutoVariable<CvString, CvUnit> m_strScriptData;
+	CvString m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility;
+	CvString m_strScriptData;
 	int m_iScenarioData;
 
 	CvUnitPromotions  m_Promotions;
 
-	FAutoVariable<std::vector<int>, CvUnit> m_terrainDoubleMoveCount;
-	FAutoVariable<std::vector<int>, CvUnit> m_featureDoubleMoveCount;
-	FAutoVariable<std::vector<int>, CvUnit> m_terrainImpassableCount;
-	FAutoVariable<std::vector<int>, CvUnit> m_featureImpassableCount;
-	FAutoVariable<std::vector<int>, CvUnit> m_extraTerrainAttackPercent;
-	FAutoVariable<std::vector<int>, CvUnit> m_extraTerrainDefensePercent;
-	FAutoVariable<std::vector<int>, CvUnit> m_extraFeatureAttackPercent;
-	FAutoVariable<std::vector<int>, CvUnit> m_extraFeatureDefensePercent;
-	FAutoVariable<std::vector<int>, CvUnit> m_extraUnitCombatModifier;
-	FAutoVariable<std::vector<int>, CvUnit> m_unitClassModifier;
+	std::vector<int> m_terrainDoubleMoveCount;
+	std::vector<int> m_featureDoubleMoveCount;
+	std::vector<int> m_terrainImpassableCount;
+	std::vector<int> m_featureImpassableCount;
+	std::vector<int> m_extraTerrainAttackPercent;
+	std::vector<int> m_extraTerrainDefensePercent;
+	std::vector<int> m_extraFeatureAttackPercent;
+	std::vector<int> m_extraFeatureDefensePercent;
+	std::vector<int> m_extraUnitCombatModifier;
+	std::vector<int> m_unitClassModifier;
 	int m_iMissionTimer;
-	FAutoVariable<int, CvUnit> m_iMissionAIX;
-	FAutoVariable<int, CvUnit> m_iMissionAIY;
-	FAutoVariable<MissionAITypes, CvUnit> m_eMissionAIType;
+	int m_iMissionAIX;
+	int m_iMissionAIY;
+	MissionAITypes m_eMissionAIType;
 	IDInfo m_missionAIUnit;
-	FAutoVariable<ActivityTypes, CvUnit> m_eActivityType;
-	FAutoVariable<AutomateTypes, CvUnit> m_eAutomateType;
-	FAutoVariable<UnitAITypes, CvUnit> m_eUnitAIType;
+	ActivityTypes m_eActivityType;
+	AutomateTypes m_eAutomateType;
+	UnitAITypes m_eUnitAIType;
 	DestructionNotification<UnitHandle> m_destructionNotification;
 
 	UnitHandle  m_thisHandle;

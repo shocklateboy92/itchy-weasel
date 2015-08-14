@@ -4103,8 +4103,8 @@ void CvGame::setGameTurn(int iNewValue)
 {
 	if (getGameTurn() != iNewValue)
 	{
-		std::string turnMessage = std::string("Game Turn ") + FSerialization::toString(iNewValue) + std::string("\n");
-		gDLL->netMessageDebugLog(turnMessage);
+		//std::string turnMessage = std::string("Game Turn ") + FSerialization::toString(iNewValue) + std::string("\n");
+		//gDLL->netMessageDebugLog(turnMessage);
 
 		CvPreGame::setGameTurn(iNewValue);
 		CvAssert(getGameTurn() >= 0);

@@ -320,9 +320,9 @@ bool CvDllUnit::CanWork() const
 {
 	return m_pUnit->IsWork();
 }
-//------------------------------------------------------------------------------
-FAutoArchive& CvDllUnit::GetSyncArchive()
-{
-	return m_pUnit->getSyncArchive();
-}
+////------------------------------------------------------------------------------
+//FAutoArchive& CvDllUnit::GetSyncArchive()
+//{
+//	return m_pUnit->getSyncArchive();
+//}
 //------------------------------------------------------------------------------

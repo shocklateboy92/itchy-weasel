@@ -900,7 +900,8 @@ inline void FStringW::Concat( LPCWSTR lpszSource )
 inline uint FStringW::Hash( void ) const
 {
 	FSTRING_CHECK_BUFFER;
-	return ( g_CRC32.Calc( ( void* )m_pszString, GetLength() * sizeof ( wchar ) ) );
+	// return ( g_CRC32.Calc( ( void* )m_pszString, GetLength() * sizeof ( wchar ) ) );
+	return 0;
 }
 
 // Calculates a hash value for the string
@@ -908,7 +909,8 @@ inline uint FStringW::Hash( void ) const
 inline uint FStringW::Hash( LPCWSTR pszStr )
 {
 	FAssert(pszStr != NULL);
-	return ( g_CRC32.Calc( ( void* )pszStr, SafeStrlen(pszStr) * sizeof ( wchar ) ) );
+	// return ( g_CRC32.Calc( ( void* )pszStr, SafeStrlen(pszStr) * sizeof ( wchar ) ) );
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

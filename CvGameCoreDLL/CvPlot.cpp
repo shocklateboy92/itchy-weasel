@@ -55,42 +55,41 @@ namespace FSerialization
 
 				if(plot)
 				{
-					const FAutoArchive & archive = plot->getSyncArchive();
-					if(archive.hasDeltas())
-					{
-						FMemoryStream memoryStream;
-						std::vector<std::pair<std::string, std::string> > callStacks;
-						archive.saveDelta(memoryStream, callStacks);
-						gDLL->sendPlotSyncCheck(authoritativePlayer, plot->getX(), plot->getY(), memoryStream, callStacks);
-					}
+					//const FAutoArchive & archive = plot->getSyncArchive();
+					//if(archive.hasDeltas())
+					//{
+					//	FMemoryStream memoryStream;
+					//	std::vector<std::pair<std::string, std::string> > callStacks;
+					//	archive.saveDelta(memoryStream, callStacks);
+					//	gDLL->sendPlotSyncCheck(authoritativePlayer, plot->getX(), plot->getY(), memoryStream, callStacks);
+					//}
 				}
 			}
 		}
 	}
 
-	// clears ALL deltas for ALL plots
-	void ClearPlotDeltas()
-	{
-		std::set<CvPlot *>::iterator i;
-		for(i = plotsToCheck.begin(); i != plotsToCheck.end(); ++i)
-		{
-			CvPlot * plot = *i;
+	//// clears ALL deltas for ALL plots
+	//void ClearPlotDeltas()
+	//{
+	//	std::set<CvPlot *>::iterator i;
+	//	for(i = plotsToCheck.begin(); i != plotsToCheck.end(); ++i)
+	//	{
+	//		CvPlot * plot = *i;
 
-			if(plot)
-			{
-				FAutoArchive & archive = plot->getSyncArchive();
-				archive.clearDelta();
-			}
-		}
-	}
+	//		if(plot)
+	//		{
+	//			FAutoArchive & archive = plot->getSyncArchive();
+	//			archive.clearDelta();
+	//		}
+	//	}
+	//}
 }
 
 //////////////////////////////////////////////////////////////////////////
 // CvPlot
 //////////////////////////////////////////////////////////////////////////
 CvPlot::CvPlot() :
-m_syncArchive(*this)
-, m_eFeatureType("CvPlot::m_eFeatureType", m_syncArchive, true)
+m_eFeatureType(true)
 {
 	FSerialization::plotsToCheck.insert(this);
 	m_paiBuildProgress = NULL;
@@ -9636,17 +9635,17 @@ void CvPlot::SetContinentType(const char cContinent)
 	m_cContinentType = cContinent;
 }
 
-//	--------------------------------------------------------------------------------
-FAutoArchive & CvPlot::getSyncArchive()
-{
-	return m_syncArchive;
-}
-
-//	--------------------------------------------------------------------------------
-const FAutoArchive & CvPlot::getSyncArchive() const
-{
-	return m_syncArchive;
-}
+////	--------------------------------------------------------------------------------
+//FAutoArchive & CvPlot::getSyncArchive()
+//{
+//	return m_syncArchive;
+//}
+//
+////	--------------------------------------------------------------------------------
+//const FAutoArchive & CvPlot::getSyncArchive() const
+//{
+//	return m_syncArchive;
+//}
 
 //	--------------------------------------------------------------------------------
 std::string CvPlot::debugDump(const FAutoVariableBase&) const

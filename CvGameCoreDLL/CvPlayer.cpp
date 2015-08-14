@@ -83,14 +83,14 @@ namespace FSerialization
 		{
 			PlayerTypes eAuthoritativePlayerID = GC.getGame().getActivePlayer();
 			CvPlayer & authoritativePlayer = GET_PLAYER(eAuthoritativePlayerID);
-			const FAutoArchive & archive = authoritativePlayer.getSyncArchive();
-			if(archive.hasDeltas())
-			{
-				FMemoryStream ms;
-				std::vector<std::pair<std::string, std::string> > callStacks;
-				archive.saveDelta(ms, callStacks);
-				gDLL->sendPlayerSyncCheck(eAuthoritativePlayerID, ms, callStacks);
-			}
+			//const FAutoArchive & archive = authoritativePlayer.getSyncArchive();
+			//if(archive.hasDeltas())
+			//{
+			//	FMemoryStream ms;
+			//	std::vector<std::pair<std::string, std::string> > callStacks;
+			//	archive.saveDelta(ms, callStacks);
+			//	gDLL->sendPlayerSyncCheck(eAuthoritativePlayerID, ms, callStacks);
+			//}
 
 			// host is authoritative for AI players
 
@@ -101,10 +101,10 @@ namespace FSerialization
 					CvPlayer & player = GET_PLAYER(static_cast<PlayerTypes>(i));
 					if(!player.isHuman() && player.isAlive())
 					{
-						const FAutoArchive & aiArchive = player.getSyncArchive();
+						//const FAutoArchive & aiArchive = player.getSyncArchive();
 						FMemoryStream ms;
 						std::vector<std::pair<std::string, std::string> > callStacks;
-						aiArchive.saveDelta(ms, callStacks);
+						//aiArchive.saveDelta(ms, callStacks);
 						gDLL->sendPlayerSyncCheck(static_cast<PlayerTypes>(i), ms, callStacks);
 					}
 				}
@@ -112,245 +112,50 @@ namespace FSerialization
 		}
 	}
 
-	// clears ALL deltas for ALL players
-	void ClearPlayerDeltas()
-	{
-		int i = 0;
-		for(i = 0; i < MAX_PLAYERS; ++i)
-		{
-			CvPlayer & player = GET_PLAYER(static_cast<PlayerTypes>(i));
-			FAutoArchive & archive = player.getSyncArchive();
-			archive.clearDelta();
-		}
-	}
+	//// clears ALL deltas for ALL players
+	//void ClearPlayerDeltas()
+	//{
+	//	int i = 0;
+	//	for(i = 0; i < MAX_PLAYERS; ++i)
+	//	{
+	//		CvPlayer & player = GET_PLAYER(static_cast<PlayerTypes>(i));
+	//		FAutoArchive & archive = player.getSyncArchive();
+	//		archive.clearDelta();
+	//	}
+	//}
 }
 
 //	--------------------------------------------------------------------------------
 CvPlayer::CvPlayer() :
-m_syncArchive(*this)
-, m_iStartingX("CvPlayer::m_iStartingX", m_syncArchive)
-, m_iStartingY("CvPlayer::m_iStartingY", m_syncArchive)
-, m_iTotalPopulation("CvPlayer::m_iTotalPopulation", m_syncArchive, true)
-, m_iTotalLand("CvPlayer::m_iTotalLand", m_syncArchive)
-, m_iTotalLandScored("CvPlayer::m_iTotalLandScored", m_syncArchive)
-, m_iJONSCulturePerTurnForFree("CvPlayer::m_iJONSCulturePerTurnForFree", m_syncArchive)
-, m_iJONSCulturePerTurnFromMinorCivs("CvPlayer::m_iJONSCulturePerTurnFromMinorCivs", m_syncArchive)
-, m_iJONSCultureCityModifier("CvPlayer::m_iJONSCultureCityModifier", m_syncArchive)
-, m_iJONSCulture("CvPlayer::m_iJONSCulture", m_syncArchive, true)
-, m_iJONSCultureEverGenerated("CvPlayer::m_iJONSCulture", m_syncArchive)
-, m_iCulturePerWonder("CvPlayer::m_iCulturePerWonder", m_syncArchive)
-, m_iCultureWonderMultiplier("CvPlayer::m_iCultureWonderMultiplier", m_syncArchive)
-, m_iCulturePerTechResearched("CvPlayer::m_iCulturePerTechResearched", m_syncArchive)
-, m_iHappiness("CvPlayer::m_iHappiness", m_syncArchive)
-, m_iRevoltCounter("CvPlayer::m_iRevoltCounter", m_syncArchive)
-, m_iExtraHappinessPerLuxury("CvPlayer::m_iExtraHappinessPerLuxury", m_syncArchive)
-, m_iUnhappinessFromUnits("CvPlayer::m_iUnhappinessFromUnits", m_syncArchive)
-, m_iUnhappinessFromUnitsMod("CvPlayer::m_iUnhappinessFromUnitsMod", m_syncArchive)
-, m_iUnhappinessMod("CvPlayer::m_iUnhappinessMod", m_syncArchive)
-, m_iCityCountUnhappinessMod("CvPlayer::m_iCityCountUnhappinessMod", m_syncArchive)
-, m_iOccupiedPopulationUnhappinessMod("CvPlayer::m_iOccupiedPopulationUnhappinessMod", m_syncArchive)
-, m_iCapitalUnhappinessMod("CvPlayer::m_iCapitalUnhappinessMod", m_syncArchive)
-, m_iHappinessFromGarrisonedUnits("CvPlayer::m_iHappinessFromGarrisonedUnits", m_syncArchive)
-, m_iHappinessPerGarrisonedUnitCount("CvPlayer::m_iHappinessPerGarrisonedUnitCount", m_syncArchive)
-, m_iHappinessPerTradeRouteCount("CvPlayer::m_iHappinessPerTradeRouteCount", m_syncArchive)
+m_iTotalPopulation(true)
+, m_iJONSCulture(true)
 , m_iHappinessPerXPopulation(0)
-, m_iSpecialPolicyBuildingHappiness("CvPlayer::m_iSpecialPolicyBuildingHappiness", m_syncArchive)
-, m_iWoundedUnitDamageMod("CvPlayer::m_iWoundedUnitDamageMod", m_syncArchive)
-, m_iUnitUpgradeCostMod("CvPlayer::m_iUnitUpgradeCostMod", m_syncArchive)
-, m_iBarbarianCombatBonus("CvPlayer::m_iBarbarianCombatBonus", m_syncArchive)
-, m_iAlwaysSeeBarbCampsCount("CvPlayer::m_iAlwaysSeeBarbCampsCount", m_syncArchive)
-, m_iHappinessFromBuildings("CvPlayer::m_iHappinessFromBuildings", m_syncArchive)
-, m_iHappinessPerCity("CvPlayer::m_iHappinessPerCity", m_syncArchive)
 , m_iHappinessPerXPolicies(0)
-, m_iAdvancedStartPoints("CvPlayer::m_iAdvancedStartPoints", m_syncArchive)
-, m_iAttackBonusTurns("CvPlayer::m_iAttackBonusTurns", m_syncArchive)
-, m_iGoldenAgeProgressMeter("CvPlayer::m_iGoldenAgeProgressMeter", m_syncArchive, true)
-, m_iGoldenAgeMeterMod("CvPlayer::m_iGoldenAgeMeterMod", m_syncArchive)
-, m_iNumGoldenAges("CvPlayer::m_iNumGoldenAges", m_syncArchive)
-, m_iGoldenAgeTurns("CvPlayer::m_iGoldenAgeTurns", m_syncArchive)
-, m_iNumUnitGoldenAges("CvPlayer::m_iNumUnitGoldenAges", m_syncArchive)
-, m_iStrikeTurns("CvPlayer::m_iStrikeTurns", m_syncArchive)
-, m_iGoldenAgeModifier("CvPlayer::m_iGoldenAgeModifier", m_syncArchive)
-, m_iGreatPeopleCreated("CvPlayer::m_iGreatPeopleCreated", m_syncArchive)
-, m_iGreatGeneralsCreated("CvPlayer::m_iGreatGeneralsCreated", m_syncArchive)
-, m_iGreatPeopleThresholdModifier("CvPlayer::m_iGreatPeopleThresholdModifier", m_syncArchive)
-, m_iGreatGeneralsThresholdModifier("CvPlayer::m_iGreatGeneralsThresholdModifier", m_syncArchive)
-, m_iAnarchyNumTurns("CvPlayer::m_iAnarchyNumTurns", m_syncArchive)
-, m_iPolicyCostModifier("CvPlayer::m_iPolicyCostModifier", m_syncArchive)
-, m_iGreatPeopleRateModifier("CvPlayer::m_iGreatPeopleRateModifier", m_syncArchive)
-, m_iGreatPeopleRateModFromBldgs("CvPlayer::m_iGreatPeopleRateModFromBldgs", m_syncArchive)
-, m_iGreatGeneralRateModifier("CvPlayer::m_iGreatGeneralRateModifier", m_syncArchive)
-, m_iGreatGeneralRateModFromBldgs("CvPlayer::m_iGreatGeneralRateModFromBldgs", m_syncArchive)
-, m_iDomesticGreatGeneralRateModifier("CvPlayer::m_iDomesticGreatGeneralRateModifier", m_syncArchive)
-, m_iDomesticGreatGeneralRateModFromBldgs("CvPlayer::m_iDomesticGreatGeneralRateModFromBldgs", m_syncArchive)
+, m_iGoldenAgeProgressMeter(true)
 , m_iGreatPersonExpendGold(0)
-, m_iMaxGlobalBuildingProductionModifier("CvPlayer::m_iMaxGlobalBuildingProductionModifier", m_syncArchive)
-, m_iMaxTeamBuildingProductionModifier("CvPlayer::m_iMaxTeamBuildingProductionModifier", m_syncArchive)
-, m_iMaxPlayerBuildingProductionModifier("CvPlayer::m_iMaxPlayerBuildingProductionModifier", m_syncArchive)
-, m_iFreeExperience("CvPlayer::m_iFreeExperience", m_syncArchive)
-, m_iFreeExperienceFromBldgs("CvPlayer::m_iFreeExperienceFromBldgs", m_syncArchive)
-, m_iFreeExperienceFromMinors("CvPlayer::m_iFreeExperienceFromMinors", m_syncArchive)
-, m_iFeatureProductionModifier("CvPlayer::m_iFeatureProductionModifier", m_syncArchive)
-, m_iWorkerSpeedModifier("CvPlayer::m_iWorkerSpeedModifier", m_syncArchive)
-, m_iImprovementCostModifier("CvPlayer::m_iImprovementCostModifier", m_syncArchive)
-, m_iImprovementUpgradeRateModifier("CvPlayer::m_iImprovementUpgradeRateModifier", m_syncArchive)
-, m_iSpecialistProductionModifier("CvPlayer::m_iSpecialistProductionModifier", m_syncArchive)
-, m_iMilitaryProductionModifier("CvPlayer::m_iMilitaryProductionModifier", m_syncArchive)
-, m_iSpaceProductionModifier("CvPlayer::m_iSpaceProductionModifier", m_syncArchive)
-, m_iCityDefenseModifier("CvPlayer::m_iCityDefenseModifier", m_syncArchive)
-, m_iWonderProductionModifier("CvPlayer::m_iWonderProductionModifier", m_syncArchive)
-, m_iSettlerProductionModifier("CvPlayer::m_iSettlerProductionModifier", m_syncArchive)
-, m_iCapitalSettlerProductionModifier("CvPlayer::m_iCapitalSettlerProductionModifier", m_syncArchive)
-, m_iUnitProductionMaintenanceMod("CvPlayer::m_iUnitProductionMaintenanceMod", m_syncArchive)
-, m_iPolicyCostBuildingModifier("CvPlayer::m_iPolicyCostBuildingModifier", m_syncArchive)
-, m_iPolicyCostMinorCivModifier("CvPlayer::m_iPolicyCostMinorCivModifier", m_syncArchive)
-, m_iNumNukeUnits("CvPlayer::m_iNumNukeUnits", m_syncArchive)
-, m_iNumOutsideUnits("CvPlayer::m_iNumOutsideUnits", m_syncArchive, true)
-, m_iBaseFreeUnits("CvPlayer::m_iBaseFreeUnits", m_syncArchive)
-, m_iBaseFreeMilitaryUnits("CvPlayer::m_iBaseFreeMilitaryUnits", m_syncArchive)
-, m_iFreeUnitsPopulationPercent("CvPlayer::m_iFreeUnitsPopulationPercent", m_syncArchive)
-, m_iFreeMilitaryUnitsPopulationPercent("CvPlayer::m_iFreeMilitaryUnitsPopulationPercent", m_syncArchive)
-, m_iGoldPerUnit("CvPlayer::m_iGoldPerUnit", m_syncArchive)
-, m_iGoldPerMilitaryUnit("CvPlayer::m_iGoldPerMilitaryUnit", m_syncArchive)
-, m_iRouteGoldMaintenanceMod("CvPlayer::m_iRouteGoldMaintenanceMod", m_syncArchive)
-, m_iBuildingGoldMaintenanceMod("CvPlayer::m_iBuildingGoldMaintenanceMod", m_syncArchive)
-, m_iUnitGoldMaintenanceMod("CvPlayer::m_iUnitGoldMaintenanceMod", m_syncArchive)
-, m_iUnitSupplyMod("CvPlayer::m_iUnitSupplyMod", m_syncArchive)
-, m_iExtraUnitCost("CvPlayer::m_iExtraUnitCost", m_syncArchive)
-, m_iNumMilitaryUnits("CvPlayer::m_iNumMilitaryUnits", m_syncArchive)
-, m_iHappyPerMilitaryUnit("CvPlayer::m_iHappyPerMilitaryUnit", m_syncArchive)
-, m_iHappinessToCulture("CvPlayer::m_iHappinessToCulture", m_syncArchive)
-, m_iHappinessToScience("CvPlayer::m_iHappinessToScience", m_syncArchive)
-, m_iHalfSpecialistUnhappinessCount("CvPlayer::m_iHalfSpecialistUnhappinessCount", m_syncArchive)
-, m_iHalfSpecialistFoodCount("CvPlayer::m_iHalfSpecialistFoodCount", m_syncArchive)
-, m_iMilitaryFoodProductionCount("CvPlayer::m_iMilitaryFoodProductionCount", m_syncArchive)
-, m_iConscriptCount("CvPlayer::m_iConscriptCount", m_syncArchive)
-, m_iMaxConscript("CvPlayer::m_iMaxConscript", m_syncArchive)
-, m_iHighestUnitLevel("CvPlayer::m_iHighestUnitLevel", m_syncArchive)
-, m_iOverflowResearch("CvPlayer::m_iOverflowResearch", m_syncArchive, true)
-, m_iExpModifier("CvPlayer::m_iExpModifier", m_syncArchive)
-, m_iExpInBorderModifier("CvPlayer::m_iExpInBorderModifier", m_syncArchive)
-, m_iLevelExperienceModifier("CvPlayer::m_iLevelExperienceModifier", m_syncArchive)
-, m_iMinorQuestFriendshipMod("CvPlayer::m_iMinorQuestFriendshipMod", m_syncArchive)
-, m_iMinorGoldFriendshipMod("CvPlayer::m_iMinorGoldFriendshipMod", m_syncArchive)
-, m_iMinorFriendshipMinimum("CvPlayer::m_iMinorFriendshipMinimum", m_syncArchive)
-, m_iMinorFriendshipDecayMod("CvPlayer::m_iMinorFriendshipDecayMod", m_syncArchive)
-, m_iMinorScienceAlliesCount("CvPlayer::m_iMinorScienceAlliesCount", m_syncArchive)
-, m_iMinorResourceBonusCount("CvPlayer::m_iMinorResourceBonusCount", m_syncArchive)
-, m_iFreeSpecialist("CvPlayer::m_iFreeSpecialist", m_syncArchive)
-, m_iCultureBombTimer("CvPlayer::m_iCultureBombTimer", m_syncArchive)
-, m_iConversionTimer("CvPlayer::m_iConversionTimer", m_syncArchive)
-, m_iCapitalCityID("CvPlayer::m_iCapitalCityID", m_syncArchive)
-, m_iCitiesLost("CvPlayer::m_iCitiesLost", m_syncArchive)
-, m_iMilitaryMight("CvPlayer::m_iMilitaryMight", m_syncArchive)
-, m_iEconomicMight("CvPlayer::m_iEconomicMight", m_syncArchive)
-, m_iTurnMightRecomputed("CvPlayer::m_iTurnMightRecomputed", m_syncArchive)
-, m_iNewCityExtraPopulation("CvPlayer::m_iNewCityExtraPopulation", m_syncArchive)
-, m_iFreeFoodBox("CvPlayer::m_iFreeFoodBox", m_syncArchive)
-, m_iPopulationScore("CvPlayer::m_iPopulationScore", m_syncArchive)
-, m_iLandScore("CvPlayer::m_iLandScore", m_syncArchive)
-, m_iTechScore("CvPlayer::m_iTechScore", m_syncArchive)
-, m_iWondersScore("CvPlayer::m_iWondersScore", m_syncArchive)
-, m_iScoreFromFutureTech("CvPlayer::m_iScoreFromFutureTech", m_syncArchive)
-, m_iCombatExperience("CvPlayer::m_iCombatExperience", m_syncArchive)
+, m_iNumOutsideUnits(true)
+, m_iOverflowResearch(true)
 , m_iLifetimeCombatExperience(0)
-, m_iPopRushHurryCount("CvPlayer::m_iPopRushHurryCount", m_syncArchive)
-, m_iTotalImprovementsBuilt("CvPlayer::m_iTotalImprovementsBuilt", m_syncArchive)
-, m_iNextOperationID("CvPlayer::m_iNextOperationID", m_syncArchive)
-, m_iCostNextPolicy("CvPlayer::m_iCostNextPolicy", m_syncArchive)
-, m_iNumBuilders("CvPlayer::m_iNumBuilders", m_syncArchive, true)
-, m_iMaxNumBuilders("CvPlayer::m_iMaxNumBuilders", m_syncArchive)
-, m_iCityStrengthMod("CvPlayer::m_iCityStrengthMod", m_syncArchive)
-, m_iCityGrowthMod("CvPlayer::m_iCityGrowthMod", m_syncArchive)
-, m_iCapitalGrowthMod("CvPlayer::m_iCapitalGrowthMod", m_syncArchive)
-, m_iNumPlotsBought("CvPlayer::m_iNumPlotsBought", m_syncArchive)
-, m_iPlotGoldCostMod("CvPlayer::m_iPlotGoldCostMod", m_syncArchive)
-, m_iPlotCultureCostModifier("CvPlayer::m_iPlotCultureCostModifier", m_syncArchive)
+, m_iNumBuilders(true)
 , m_iPlotCultureExponentModifier(0)
 , m_iNumCitiesPolicyCostDiscount(0)
 , m_iGarrisonedCityRangeStrikeModifier(0)
 , m_iGarrisonFreeMaintenanceCount(0)
 , m_iNumCitiesFreeCultureBuilding(0)
-, m_iUnitPurchaseCostModifier("CvPlayer::m_iUnitPurchaseCostModifier", m_syncArchive)
-, m_iAllFeatureProduction("CvPlayer::m_iAllFeatureProduction", m_syncArchive)
-, m_iCityDistanceHighwaterMark("CvPlayer::m_iCityDistanceHighwaterMark", m_syncArchive)
-, m_iOriginalCapitalX("CvPlayer::m_iOriginalCapitalX", m_syncArchive)
-, m_iOriginalCapitalY("CvPlayer::m_iOriginalCapitalY", m_syncArchive)
-, m_iNumWonders("CvPlayer::m_iNumWonders", m_syncArchive)
-, m_iNumPolicies("CvPlayer::m_iNumPolicies", m_syncArchive)
-, m_iNumGreatPeople("CvPlayer::m_iNumGreatPeople", m_syncArchive)
-, m_uiStartTime("CvPlayer::m_uiStartTime", m_syncArchive)  // XXX save these?
-, m_bHasBetrayedMinorCiv("CvPlayer::m_bHasBetrayedMinorCiv", m_syncArchive)
-, m_bAlive("CvPlayer::m_bAlive", m_syncArchive)
-, m_bEverAlive("CvPlayer::m_bEverAlive", m_syncArchive)
-, m_bTurnActive("CvPlayer::m_bTurnActive", m_syncArchive, false, true)
-, m_bAutoMoves("CvPlayer::m_bAutoMoves", m_syncArchive, false, true)
-, m_bEndTurn("CvPlayer::m_bEndTurn", m_syncArchive, false, true)
+, m_bTurnActive()
+, m_bAutoMoves()
+, m_bEndTurn()
 , m_bDynamicTurnsSimultMode(true)
-, m_bPbemNewTurn("CvPlayer::m_bPbemNewTurn", m_syncArchive)
-, m_bExtendedGame("CvPlayer::m_bExtendedGame", m_syncArchive)
-, m_bFoundedFirstCity("CvPlayer::m_bFoundedFirstCity", m_syncArchive)
-, m_bStrike("CvPlayer::m_bStrike", m_syncArchive)
-, m_bCramped("CvPlayer::m_bCramped", m_syncArchive)
-, m_bLostCapital("CvPlayer::m_bLostCapital", m_syncArchive)
 , m_eConqueror(NO_PLAYER)
-, m_bHasAdoptedStateReligion("CvPlayer::m_bHasAdoptedStateReligion", m_syncArchive)
-, m_bAlliesGreatPersonBiasApplied("CvPlayer::m_bAlliesGreatPersonBiasApplied", m_syncArchive)
-, m_eID("CvPlayer::m_eID", m_syncArchive)
-, m_ePersonalityType("CvPlayer::m_ePersonalityType", m_syncArchive)
-, m_aiCityYieldChange("CvPlayer::m_aiCityYieldChange", m_syncArchive)
-, m_aiCoastalCityYieldChange("CvPlayer::m_aiCoastalCityYieldChange", m_syncArchive)
-, m_aiCapitalYieldChange("CvPlayer::m_aiCapitalYieldChange", m_syncArchive)
-, m_aiCapitalYieldPerPopChange("CvPlayer::m_aiCapitalYieldPerPopChange", m_syncArchive)
-, m_aiSeaPlotYield("CvPlayer::m_aiSeaPlotYield", m_syncArchive)
-, m_aiYieldRateModifier("CvPlayer::m_aiYieldRateModifier", m_syncArchive)
-, m_aiCapitalYieldRateModifier("CvPlayer::m_aiCapitalYieldRateModifier", m_syncArchive)
-, m_aiExtraYieldThreshold("CvPlayer::m_aiExtraYieldThreshold", m_syncArchive)
-, m_aiSpecialistExtraYield("CvPlayer::m_aiSpecialistExtraYield", m_syncArchive)
-, m_aiProximityToPlayer("CvPlayer::m_aiProximityToPlayer", m_syncArchive, true)
-, m_aiResearchAgreementCounter("CvPlayer::m_aiResearchAgreementCounter", m_syncArchive)
-, m_aiIncomingUnitTypes("CvPlayer::m_aiIncomingUnitTypes", m_syncArchive, true)
-, m_aiIncomingUnitCountdowns("CvPlayer::m_aiIncomingUnitCountdowns", m_syncArchive, true)
-, m_aOptions("CvPlayer::m_aOptions", m_syncArchive)
-, m_strReligionKey("CvPlayer::m_strReligionKey", m_syncArchive)
-, m_strScriptData("CvPlayer::m_strScriptData", m_syncArchive)
-, m_paiNumResourceUsed("CvPlayer::m_paiNumResourceUsed", m_syncArchive)
-, m_paiNumResourceTotal("CvPlayer::m_paiNumResourceTotal", m_syncArchive)
-, m_paiResourceGiftedToMinors("CvPlayer::m_paiResourceGiftedToMinors", m_syncArchive)
-, m_paiResourceExport("CvPlayer::m_paiResourceExport", m_syncArchive)
-, m_paiResourceImport("CvPlayer::m_paiResourceImport", m_syncArchive)
-, m_paiResourceFromMinors("CvPlayer::m_paiResourceFromMinors", m_syncArchive)
-, m_paiImprovementCount("CvPlayer::m_paiImprovementCount", m_syncArchive)
-, m_paiFreeBuildingCount("CvPlayer::m_paiFreeBuildingCount", m_syncArchive)
-, m_paiFreePromotionCount("CvPlayer::m_paiFreePromotionCount", m_syncArchive)
-, m_paiUnitCombatProductionModifiers("CvPlayer::m_paiUnitCombatProductionModifiers", m_syncArchive)
-, m_paiUnitCombatFreeExperiences("CvPlayer::m_paiUnitCombatFreeExperiences", m_syncArchive)
-, m_paiUnitClassCount("CvPlayer::m_paiUnitClassCount", m_syncArchive, true)
-, m_paiUnitClassMaking("CvPlayer::m_paiUnitClassMaking", m_syncArchive, true)
-, m_paiBuildingClassCount("CvPlayer::m_paiBuildingClassCount", m_syncArchive)
-, m_paiBuildingClassMaking("CvPlayer::m_paiBuildingClassMaking", m_syncArchive, true)
-, m_paiProjectMaking("CvPlayer::m_paiProjectMaking", m_syncArchive)
-, m_paiHurryCount("CvPlayer::m_paiHurryCount", m_syncArchive)
-, m_paiHurryModifier("CvPlayer::m_paiHurryModifier", m_syncArchive)
-, m_pabLoyalMember("CvPlayer::m_pabLoyalMember", m_syncArchive)
-, m_pabGetsScienceFromPlayer("CvPlayer::m_pabGetsScienceFromPlayer", m_syncArchive)
-, m_ppaaiSpecialistExtraYield("CvPlayer::m_ppaaiSpecialistExtraYield", m_syncArchive)
-, m_ppaaiImprovementYieldChange("CvPlayer::m_ppaaiImprovementYieldChange", m_syncArchive)
-, m_ppaaiBuildingClassYieldMod("CvPlayer::m_ppaaiBuildingClassYieldMod", m_syncArchive)
+, m_aiProximityToPlayer(true)
+, m_aiIncomingUnitTypes(true)
+, m_aiIncomingUnitCountdowns(true)
+, m_paiUnitClassCount(true)
+, m_paiUnitClassMaking(true)
+, m_paiBuildingClassMaking(true)
 , m_UnitCycle(this)
-, m_bEverPoppedGoody("CvPlayer::m_bEverPoppedGoody", m_syncArchive)
-, m_bEverTrainedBuilder("CvPlayer::m_bEverTrainedBuilder", m_syncArchive)
-, m_iCityConnectionHappiness("CvPlayer::m_iCityConnectionHappiness", m_syncArchive)
-, m_iHolyCityID("CvPlayer::m_iHolyCityID", m_syncArchive)
-, m_iTurnsSinceSettledLastCity("CvPlayer::m_iTurnsSinceSettledLastCity", m_syncArchive)
-, m_iNumNaturalWondersDiscoveredInArea("CvPlayer::m_iNumNaturalWondersDiscoveredInArea", m_syncArchive)
-, m_iStrategicResourceMod("CvPlayer::m_iStrategicResourceMod", m_syncArchive)
-, m_iSpecialistCultureChange("CvPlayer::m_iSpecialistCultureChange", m_syncArchive)
-, m_iGreatPeopleSpawnCounter("CvPlayer::m_iGreatPeopleSpawnCounter", m_syncArchive)
-, m_iFreeTechCount("CvPlayer::m_iFreeTechCount", m_syncArchive, true)
+, m_iFreeTechCount(true)
 , m_iMedianTechPercentage(50)
-, m_iNumFreePolicies("CvPlayer::m_iNumFreePolicies", m_syncArchive)
-, m_iNumFreePoliciesEver("CvPlayer::m_iNumFreePoliciesEver", m_syncArchive)
 , m_iLastSliceMoved(0)
 , m_eEndTurnBlockingType(NO_ENDTURN_BLOCKING_TYPE)
 , m_iEndTurnBlockingNotificationIndex(0)
@@ -650,8 +455,8 @@ void CvPlayer::uninit()
 	m_aiPlots.clear();
 	m_bfEverConqueredBy.ClearAll();
 
-	FAutoArchive & archive = getSyncArchive();
-	archive.clearDelta();
+	//FAutoArchive & archive = getSyncArchive();
+	//archive.clearDelta();
 
 	m_iStartingX = INVALID_PLOT_COORD;
 	m_iStartingY = INVALID_PLOT_COORD;
@@ -848,7 +653,7 @@ void CvPlayer::uninit()
 // Initializes data members that are serialized.
 void CvPlayer::reset(PlayerTypes eID, bool bConstructorCall)
 {
-	m_syncArchive.reset();
+	//m_syncArchive.reset();
 	//--------------------------------
 	// Uninit class
 	uninit();
@@ -1027,21 +832,21 @@ void CvPlayer::reset(PlayerTypes eID, bool bConstructorCall)
 		m_ppaaiSpecialistExtraYield.resize(GC.getNumSpecialistInfos());
 		for( unsigned int i = 0; i < m_ppaaiSpecialistExtraYield.size(); ++i )
 		{
-			m_ppaaiSpecialistExtraYield.setAt( i, yield );
+			m_ppaaiSpecialistExtraYield[ i] =  yield ;
 		}
 
 		m_ppaaiImprovementYieldChange.clear();
 		m_ppaaiImprovementYieldChange.resize(GC.getNumImprovementInfos());
 		for( unsigned int i = 0; i < m_ppaaiImprovementYieldChange.size(); ++i )
 		{
-			m_ppaaiImprovementYieldChange.setAt( i, yield );
+			m_ppaaiImprovementYieldChange[ i] =  yield ;
 		}
 
 		m_ppaaiBuildingClassYieldMod.clear();
 		m_ppaaiBuildingClassYieldMod.resize(GC.getNumBuildingClassInfos());
 		for( unsigned int i = 0; i < m_ppaaiBuildingClassYieldMod.size(); ++i )
 		{
-			m_ppaaiBuildingClassYieldMod.setAt( i, yield );
+			m_ppaaiBuildingClassYieldMod[ i] =  yield ;
 		}
 
 		m_aVote.clear();
@@ -2923,13 +2728,13 @@ bool CvPlayer::isWhiteFlag() const
 //	--------------------------------------------------------------------------------
 const char* CvPlayer::GetStateReligionName() const
 {
-	return GetLocalizedText(m_strReligionKey.get());
+	return GetLocalizedText(m_strReligionKey);
 }
 
 //	--------------------------------------------------------------------------------
 CvString CvPlayer::GetStateReligionKey() const
 {
-	return m_strReligionKey.get();
+	return m_strReligionKey;
 }
 
 //	--------------------------------------------------------------------------------
@@ -7252,7 +7057,7 @@ void CvPlayer::ChangeCityYieldChange(YieldTypes eYield, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiCityYieldChange.setAt(eYield, m_aiCityYieldChange[eYield] + iChange);
+		m_aiCityYieldChange[eYield] =  m_aiCityYieldChange[eYield] + iChange;
 
 		updateYield();
 	}
@@ -7276,7 +7081,7 @@ void CvPlayer::ChangeCoastalCityYieldChange(YieldTypes eYield, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiCoastalCityYieldChange.setAt(eYield, m_aiCoastalCityYieldChange[eYield] + iChange);
+		m_aiCoastalCityYieldChange[eYield] =  m_aiCoastalCityYieldChange[eYield] + iChange;
 
 		updateYield();
 	}
@@ -7300,7 +7105,7 @@ void CvPlayer::ChangeCapitalYieldChange(YieldTypes eYield, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiCapitalYieldChange.setAt(eYield, m_aiCapitalYieldChange[eYield] + iChange);
+		m_aiCapitalYieldChange[eYield] =  m_aiCapitalYieldChange[eYield] + iChange;
 
 		updateYield();
 	}
@@ -7324,7 +7129,7 @@ void CvPlayer::ChangeCapitalYieldPerPopChange(YieldTypes eYield, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiCapitalYieldPerPopChange.setAt(eYield, m_aiCapitalYieldPerPopChange[eYield] + iChange);
+		m_aiCapitalYieldPerPopChange[eYield] =  m_aiCapitalYieldPerPopChange[eYield] + iChange;
 
 		updateYield();
 	}
@@ -12705,7 +12510,7 @@ void CvPlayer::changeSeaPlotYield(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiSeaPlotYield.setAt(eIndex, m_aiSeaPlotYield[eIndex] + iChange);
+		m_aiSeaPlotYield[eIndex] =  m_aiSeaPlotYield[eIndex] + iChange;
 
 		updateYield();
 	}
@@ -12729,7 +12534,7 @@ void CvPlayer::changeYieldRateModifier(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiYieldRateModifier.setAt(eIndex, m_aiYieldRateModifier[eIndex] + iChange);
+		m_aiYieldRateModifier[eIndex] =  m_aiYieldRateModifier[eIndex] + iChange;
 
 		invalidateYieldRankCache(eIndex);
 
@@ -12758,7 +12563,7 @@ void CvPlayer::changeCapitalYieldRateModifier(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiCapitalYieldRateModifier.setAt(eIndex, m_aiCapitalYieldRateModifier[eIndex] + iChange);
+		m_aiCapitalYieldRateModifier[eIndex] =  m_aiCapitalYieldRateModifier[eIndex] + iChange;
 		invalidateYieldRankCache(eIndex);
 	}
 }
@@ -12785,7 +12590,7 @@ void CvPlayer::updateExtraYieldThreshold(YieldTypes eIndex)
 
 	if (getExtraYieldThreshold(eIndex) != iBestValue)
 	{
-		m_aiExtraYieldThreshold.setAt(eIndex, iBestValue);
+		m_aiExtraYieldThreshold[eIndex] =  iBestValue;
 		CvAssert(getExtraYieldThreshold(eIndex) >= 0);
 
 		updateYield();
@@ -12944,7 +12749,7 @@ void CvPlayer::SetGetsScienceFromPlayer(PlayerTypes ePlayer, bool bNewValue)
 
 	if (bNewValue != m_pabGetsScienceFromPlayer[ePlayer])
 	{
-		m_pabGetsScienceFromPlayer.setAt(ePlayer, bNewValue);
+		m_pabGetsScienceFromPlayer[ePlayer] =  bNewValue;
 	}
 }
 
@@ -13056,7 +12861,7 @@ void CvPlayer::changeSpecialistExtraYield(YieldTypes eIndex, int iChange)
 			}
 		}
 
-		m_aiSpecialistExtraYield.setAt(eIndex ,m_aiSpecialistExtraYield[eIndex] + iChange);
+		m_aiSpecialistExtraYield[eIndex ] = m_aiSpecialistExtraYield[eIndex] + iChange;
 		CvAssert(getSpecialistExtraYield(eIndex) >= 0);
 
 		updateYield();
@@ -13164,7 +12969,7 @@ void CvPlayer::SetProximityToPlayer(PlayerTypes ePlayer, PlayerProximityTypes eP
 		}
 	}
 
-	m_aiProximityToPlayer.setAt(ePlayer, eProximity);
+	m_aiProximityToPlayer[ePlayer] =  eProximity;
 }
 
 //	--------------------------------------------------------------------------------
@@ -13352,7 +13157,7 @@ void CvPlayer::SetResearchAgreementCounter(PlayerTypes ePlayer, int iValue)
 
 	CvAssertMsg(GetID() != ePlayer, "Trying to make a RA Agreement with oneself. Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
 
-	m_aiResearchAgreementCounter.setAt(ePlayer, iValue);
+	m_aiResearchAgreementCounter[ePlayer] =  iValue;
 }
 
 //	--------------------------------------------------------------------------------
@@ -13562,7 +13367,7 @@ void CvPlayer::SetIncomingUnitType(int iIndex, UnitTypes eUnitType)
 
 	if (eUnitType != m_aiIncomingUnitTypes[iIndex])
 	{
-		m_aiIncomingUnitTypes.setAt(iIndex, eUnitType);
+		m_aiIncomingUnitTypes[iIndex] =  eUnitType;
 	}
 }
 
@@ -13583,7 +13388,7 @@ void CvPlayer::SetIncomingUnitCountdown(int iIndex, int iNumTurns)
 	CvAssertMsg(iIndex < MAX_INCOMING_UNITS, "iIndex is expected to be within maximum bounds (invalid Index)");
 
 	if (iNumTurns != m_aiIncomingUnitCountdowns[iIndex])
-		m_aiIncomingUnitCountdowns.setAt(iIndex, iNumTurns);
+		m_aiIncomingUnitCountdowns[iIndex] =  iNumTurns;
 }
 
 //	--------------------------------------------------------------------------------
@@ -13614,7 +13419,7 @@ void CvPlayer::setOption(PlayerOptionTypes eID, bool bNewValue)
 	{
 		if ((*itr).first == eID)
 		{
-			m_aOptions.setAt(iIndex, PlayerOptionEntry((uint)eID, bNewValue?1:0));
+			m_aOptions[iIndex] =  PlayerOptionEntry((uint)eID, bNewValue?1:0);
 			return;
 		}
 		++iIndex;
@@ -13651,7 +13456,7 @@ void CvPlayer::changeNumResourceUsed(ResourceTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_paiNumResourceUsed.setAt(eIndex, m_paiNumResourceUsed[eIndex] + iChange);
+		m_paiNumResourceUsed[eIndex] =  m_paiNumResourceUsed[eIndex] + iChange;
 	}
 
 	if (iChange > 0)
@@ -13703,7 +13508,7 @@ void CvPlayer::changeNumResourceTotal(ResourceTypes eIndex, int iChange, bool bI
 
 	if (iChange != 0)
 	{
-		m_paiNumResourceTotal.setAt(eIndex, m_paiNumResourceTotal[eIndex] + iChange);
+		m_paiNumResourceTotal[eIndex] =  m_paiNumResourceTotal[eIndex] + iChange;
 
 		// Minors with an Ally give their Resources to their friend (awww)
 		if (isMinorCiv())
@@ -13834,7 +13639,7 @@ void CvPlayer::changeResourceGiftedToMinors(ResourceTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_paiResourceGiftedToMinors.setAt(eIndex, m_paiResourceGiftedToMinors[eIndex] + iChange);
+		m_paiResourceGiftedToMinors[eIndex] =  m_paiResourceGiftedToMinors[eIndex] + iChange;
 		CvAssert(getResourceGiftedToMinors(eIndex) >= 0);
 	}
 }
@@ -13855,7 +13660,7 @@ void CvPlayer::changeResourceExport(ResourceTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_paiResourceExport.setAt(eIndex, m_paiResourceExport[eIndex] + iChange);
+		m_paiResourceExport[eIndex] =  m_paiResourceExport[eIndex] + iChange;
 		CvAssert(getResourceExport(eIndex) >= 0);
 
 		DoUpdateHappiness();
@@ -13878,7 +13683,7 @@ void CvPlayer::changeResourceImport(ResourceTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_paiResourceImport.setAt(eIndex, m_paiResourceImport[eIndex] + iChange);
+		m_paiResourceImport[eIndex] =  m_paiResourceImport[eIndex] + iChange;
 		CvAssert(getResourceImport(eIndex) >= 0);
 
 		DoUpdateHappiness();
@@ -13911,7 +13716,7 @@ void CvPlayer::changeResourceFromMinors(ResourceTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_paiResourceFromMinors.setAt(eIndex, m_paiResourceFromMinors[eIndex] + iChange);
+		m_paiResourceFromMinors[eIndex] =  m_paiResourceFromMinors[eIndex] + iChange;
 		CvAssert(getResourceFromMinors(eIndex) >= 0);
 
 		DoUpdateHappiness();
@@ -13946,7 +13751,7 @@ void CvPlayer::changeImprovementCount(ImprovementTypes eIndex, int iChange)
 {
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumImprovementInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-	m_paiImprovementCount.setAt(eIndex, m_paiImprovementCount[eIndex] + iChange);
+	m_paiImprovementCount[eIndex] =  m_paiImprovementCount[eIndex] + iChange;
 	CvAssert(getImprovementCount(eIndex) >= 0);
 }
 
@@ -13981,7 +13786,7 @@ void CvPlayer::changeFreeBuildingCount(BuildingTypes eIndex, int iChange)
 	{
 		iOldFreeBuildingCount = getFreeBuildingCount(eIndex);
 
-		m_paiFreeBuildingCount.setAt(eIndex, m_paiFreeBuildingCount[eIndex] + iChange);
+		m_paiFreeBuildingCount[eIndex] =  m_paiFreeBuildingCount[eIndex] + iChange;
 		CvAssert(getFreeBuildingCount(eIndex) >= 0);
 
 		if (iOldFreeBuildingCount == 0)
@@ -14032,7 +13837,7 @@ void CvPlayer::ChangeFreePromotionCount(PromotionTypes ePromotion, int iChange)
 	{
 		bool bWasFree = IsFreePromotion(ePromotion);
 
-		m_paiFreePromotionCount.setAt(ePromotion, m_paiFreePromotionCount[ePromotion] + iChange);
+		m_paiFreePromotionCount[ePromotion] =  m_paiFreePromotionCount[ePromotion] + iChange;
 
 		CvAssert(GetFreePromotionCount(ePromotion) >= 0);
 
@@ -14073,7 +13878,7 @@ void CvPlayer::changeUnitCombatProductionModifiers(UnitCombatTypes eIndex, int i
 
 	if (iChange != 0)
 	{
-		m_paiUnitCombatProductionModifiers.setAt(eIndex, m_paiUnitCombatProductionModifiers[eIndex] + iChange);
+		m_paiUnitCombatProductionModifiers[eIndex] =  m_paiUnitCombatProductionModifiers[eIndex] + iChange;
 	}
 }
 
@@ -14095,7 +13900,7 @@ void CvPlayer::changeUnitCombatFreeExperiences(UnitCombatTypes eIndex, int iChan
 
 	if (iChange != 0)
 	{
-		m_paiUnitCombatFreeExperiences.setAt(eIndex, m_paiUnitCombatFreeExperiences[eIndex] + iChange);
+		m_paiUnitCombatFreeExperiences[eIndex] =  m_paiUnitCombatFreeExperiences[eIndex] + iChange;
 	}
 }
 
@@ -14136,7 +13941,7 @@ void CvPlayer::changeUnitClassCount(UnitClassTypes eIndex, int iChange)
 {
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumUnitClassInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-	m_paiUnitClassCount.setAt(eIndex, m_paiUnitClassCount[eIndex] + iChange);
+	m_paiUnitClassCount[eIndex] =  m_paiUnitClassCount[eIndex] + iChange;
 	CvAssert(getUnitClassCount(eIndex) >= 0);
 }
 
@@ -14158,7 +13963,7 @@ void CvPlayer::changeUnitClassMaking(UnitClassTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_paiUnitClassMaking.setAt(eIndex, m_paiUnitClassMaking[eIndex] + iChange);
+		m_paiUnitClassMaking[eIndex] =  m_paiUnitClassMaking[eIndex] + iChange;
 		CvAssert(getUnitClassMaking(eIndex) >= 0);
 
 		CvCivilizationInfo& playerCivilizationInfo = getCivilizationInfo();
@@ -14240,7 +14045,7 @@ void CvPlayer::changeBuildingClassCount(BuildingClassTypes eIndex, int iChange)
 {
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumBuildingClassInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-	m_paiBuildingClassCount.setAt(eIndex, m_paiBuildingClassCount[eIndex] + iChange);
+	m_paiBuildingClassCount[eIndex] =  m_paiBuildingClassCount[eIndex] + iChange;
 	CvAssert(getBuildingClassCount(eIndex) >= 0);
 }
 
@@ -14262,7 +14067,7 @@ void CvPlayer::changeBuildingClassMaking(BuildingClassTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_paiBuildingClassMaking.setAt(eIndex, m_paiBuildingClassMaking[eIndex] + iChange);
+		m_paiBuildingClassMaking[eIndex] =  m_paiBuildingClassMaking[eIndex] + iChange;
 		CvAssert(getBuildingClassMaking(eIndex) >= 0);
 
 		const BuildingTypes eBuilding = (BuildingTypes) getCivilizationInfo().getCivilizationBuildings(eIndex);
@@ -14319,7 +14124,7 @@ void CvPlayer::changeProjectMaking(ProjectTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_paiProjectMaking.setAt(eIndex, m_paiProjectMaking[eIndex] + iChange);
+		m_paiProjectMaking[eIndex] =  m_paiProjectMaking[eIndex] + iChange;
 		CvAssert(getProjectMaking(eIndex) >= 0);
 
 		// Update the amount of a Resource used up by Projects in Production
@@ -14481,7 +14286,7 @@ void CvPlayer::changeHurryCount(HurryTypes eIndex, int iChange)
 	CvAssert(eIndex < GC.getNumHurryInfos());
 
 	int oldHurryCount = m_paiHurryCount[eIndex];
-	m_paiHurryCount.setAt(eIndex, m_paiHurryCount[eIndex] + iChange);
+	m_paiHurryCount[eIndex] =  m_paiHurryCount[eIndex] + iChange;
 	CvAssert(getHurryCount(eIndex) >= 0);
 
 	CvHurryInfo* pkHurryInfo = GC.getHurryInfo(eIndex);
@@ -14516,7 +14321,7 @@ void CvPlayer::changeHurryModifier(HurryTypes eIndex, int iChange)
 	{
 		CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 		CvAssertMsg(eIndex < GC.getNumHurryInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
-		m_paiHurryModifier.setAt(eIndex, m_paiHurryModifier[eIndex] + iChange);
+		m_paiHurryModifier[eIndex] =  m_paiHurryModifier[eIndex] + iChange;
 	}
 }
 
@@ -14560,7 +14365,7 @@ void CvPlayer::changeSpecialistExtraYield(SpecialistTypes eIndex1, YieldTypes eI
 	{
 		Firaxis::Array<int, NUM_YIELD_TYPES> yields = m_ppaaiSpecialistExtraYield[eIndex1];
 		yields[eIndex2] = (m_ppaaiSpecialistExtraYield[eIndex1][eIndex2] + iChange);
-		m_ppaaiSpecialistExtraYield.setAt(eIndex1, yields);
+		m_ppaaiSpecialistExtraYield[eIndex1] =  yields;
 		CvAssert(getSpecialistExtraYield(eIndex1, eIndex2) >= 0);
 
 		updateExtraSpecialistYield();
@@ -14593,7 +14398,7 @@ void CvPlayer::changeImprovementYieldChange(ImprovementTypes eIndex1, YieldTypes
 
 		Firaxis::Array<int, NUM_YIELD_TYPES> yields = m_ppaaiImprovementYieldChange[eIndex1];
 		yields[eIndex2] = (m_ppaaiImprovementYieldChange[eIndex1][eIndex2] + iChange);
-		m_ppaaiImprovementYieldChange.setAt(eIndex1, yields);
+		m_ppaaiImprovementYieldChange[eIndex1] =  yields;
 		CvAssert(getImprovementYieldChange(eIndex1, eIndex2) >= 0);
 
 		updateYield();
@@ -15205,7 +15010,7 @@ CvAIOperation* CvPlayer::addAIOperation(int OperationType, PlayerTypes eEnemy, i
 	CvAIOperation* pNewOperation = CvAIOperation::CreateOperation((AIOperationTypes) OperationType, m_eID);
 	if (pNewOperation)
 	{
-		m_AIOperations.insert( std::make_pair(m_iNextOperationID.get(), pNewOperation) );
+		m_AIOperations.insert( std::make_pair(m_iNextOperationID, pNewOperation) );
 		pNewOperation->Init(m_iNextOperationID, m_eID, eEnemy, iArea, pTarget, pMuster);
 		m_iNextOperationID++;
 	}
@@ -17775,8 +17580,8 @@ void CvPlayer::Read(FDataStream& kStream)
 		{
 			eYieldLoop = (YieldTypes) iYieldLoop;
 
-			m_aiCityYieldChange.setAt(eYieldLoop, m_aiCityYieldChange[eYieldLoop] * 100);
-			m_aiCapitalYieldChange.setAt(eYieldLoop, m_aiCapitalYieldChange[eYieldLoop] * 100);
+			m_aiCityYieldChange[eYieldLoop] =  m_aiCityYieldChange[eYieldLoop] * 100;
+			m_aiCapitalYieldChange[eYieldLoop] =  m_aiCapitalYieldChange[eYieldLoop] * 100;
 		}
 	}
 
@@ -17829,12 +17634,12 @@ void CvPlayer::Read(FDataStream& kStream)
 	}
 	else
 	{
-		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiNumResourceUsed.dirtyGet());
-		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiNumResourceTotal.dirtyGet());
-		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiResourceGiftedToMinors.dirtyGet());
-		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiResourceExport.dirtyGet());
-		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiResourceImport.dirtyGet());
-		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiResourceFromMinors.dirtyGet());
+		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiNumResourceUsed);
+		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiNumResourceTotal);
+		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiResourceGiftedToMinors);
+		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiResourceExport);
+		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiResourceImport);
+		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiResourceFromMinors);
 	}
 
 	kStream >> m_paiImprovementCount;
@@ -17857,7 +17662,7 @@ void CvPlayer::Read(FDataStream& kStream)
 				kStream >> iTempValue;
 				if (iType != -1)
 				{
-					m_paiFreeBuildingCount.setAt(iType, iTempValue);
+					m_paiFreeBuildingCount[iType] =  iTempValue;
 				}
 				else
 				{
@@ -17877,7 +17682,7 @@ void CvPlayer::Read(FDataStream& kStream)
 		for (int iI = 0; iI < iNumEntries; iI++)
 		{
 			kStream >> iTempValue;
-			m_paiFreeBuildingCount.setAt(iI, iTempValue);
+			m_paiFreeBuildingCount[iI] =  iTempValue;
 		}
 	}
 
@@ -17897,7 +17702,7 @@ void CvPlayer::Read(FDataStream& kStream)
 			if (sTemp != "PROMOTION_OLIGARCHY")
 			{
 				iType = GC.getInfoTypeForString(sTemp);
-				m_paiFreePromotionCount.setAt(iType, iTempValue);
+				m_paiFreePromotionCount[iType] =  iTempValue;
 			}
 		}
 	}
@@ -17909,7 +17714,7 @@ void CvPlayer::Read(FDataStream& kStream)
 		for (int iI = 0; iI < iNumEntries; iI++)
 		{
 			kStream >> iTempValue;
-			m_paiFreePromotionCount.setAt(iI, iTempValue);
+			m_paiFreePromotionCount[iI] =  iTempValue;
 		}
 	}
 
@@ -20046,17 +19851,17 @@ bool CvPlayer::IsEverConqueredBy(PlayerTypes ePlayer)
 	return m_bfEverConqueredBy.GetBit(ePlayer);
 }
 
-//	------------------------------------------------------------------------------------------------
-const FAutoArchive & CvPlayer::getSyncArchive() const
-{
-	return m_syncArchive;
-}
-
-//	--------------------------------------------------------------------------------
-FAutoArchive & CvPlayer::getSyncArchive()
-{
-	return m_syncArchive;
-}
+////	------------------------------------------------------------------------------------------------
+//const FAutoArchive & CvPlayer::getSyncArchive() const
+//{
+//	return m_syncArchive;
+//}
+//
+////	--------------------------------------------------------------------------------
+//FAutoArchive & CvPlayer::getSyncArchive()
+//{
+//	return m_syncArchive;
+//}
 
 //	-----------------------------------------------------------------------------------------------
 bool CvPlayer::isLocalPlayer() const
@@ -20130,8 +19935,8 @@ void CvPlayer::reconnected()
 	bool isMultiplayer = kGame.isGameMultiPlayer();
 	if (isMultiplayer && !isLocalPlayer())
 	{
-		FAutoArchive & archive = getSyncArchive();
-		archive.clearDelta();
+		//FAutoArchive & archive = getSyncArchive();
+		//archive.clearDelta();
 
 		Localization::String connectString = Localization::Lookup("TXT_KEY_PLAYER_CONNECTING");
 		connectString << getNameKey();
@@ -20196,17 +20001,17 @@ std::string CvPlayer::debugDump(const FAutoVariableBase&) const
 std::string CvPlayer::stackTraceRemark(const FAutoVariableBase & var) const
 {
 	std::string result = debugDump(var);
-	if(&var == &m_aOptions)
-	{//detail output for player options array.
-		result += "\nPlayer Options:";
-		for (PlayerOptionsVector::const_iterator itr = m_aOptions.begin(); itr != m_aOptions.end(); ++itr )
-		{
-			CvString curOptionsStr;
-			curOptionsStr.Format("\n%u, %d", itr->first, itr->second);
-			result += curOptionsStr;
-		}
-		result += "\n";
-	}
+	//if(&var == &m_aOptions)
+	//{//detail output for player options array.
+	//	result += "\nPlayer Options:";
+	//	for (PlayerOptionsVector::const_iterator itr = m_aOptions.begin(); itr != m_aOptions.end(); ++itr )
+	//	{
+	//		CvString curOptionsStr;
+	//		curOptionsStr.Format("\n%u, %d", itr->first, itr->second);
+	//		result += curOptionsStr;
+	//	}
+	//	result += "\n";
+	//}
 	return result;
 }
 

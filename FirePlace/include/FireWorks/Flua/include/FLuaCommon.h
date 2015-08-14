@@ -108,44 +108,44 @@ namespace FLua
 	static void SetErrorHandler(ErrorHandler kHandler) { Details::ErrorHandlerHolder::Get() = kHandler; }
 	static ErrorHandler GetErrorHandler() { return Details::ErrorHandlerHolder::Get(); }
 
-	// ScopedErrorHandler - Assign a special error handler for the current scope.  Previous error handler is restored in dtor.
-	class ScopedErrorHandler
-	{
-	public:
-		explicit ScopedErrorHandler(ErrorHandler kErrorHandler);
-		~ScopedErrorHandler();
+	//// ScopedErrorHandler - Assign a special error handler for the current scope.  Previous error handler is restored in dtor.
+	//class ScopedErrorHandler
+	//{
+	//public:
+	//	explicit ScopedErrorHandler(ErrorHandler kErrorHandler);
+	//	~ScopedErrorHandler();
 
-	private:
-		ErrorHandler m_kPrevErrorHandler;
-	};
+	//private:
+	//	ErrorHandler m_kPrevErrorHandler;
+	//};
 
-	// CreateLuaState - Creates a new lua state and loads all standard lua libraries.
-	_Ret_opt_ lua_State *CreateLuaState();
+	//// CreateLuaState - Creates a new lua state and loads all standard lua libraries.
+	//_Ret_opt_ lua_State *CreateLuaState();
 
-	// CreateLuaState - Creates a new lua state with the given allocator and loads all standard lua libraries.
-	_Ret_opt_ lua_State *CreateLuaState(lua_Alloc pfnAllocFn, void *pvUserData);
+	//// CreateLuaState - Creates a new lua state with the given allocator and loads all standard lua libraries.
+	//_Ret_opt_ lua_State *CreateLuaState(lua_Alloc pfnAllocFn, void *pvUserData);
 
-	// Execute - Executes code from a string in the given lua state.  Returns true if the code compiled and executed
-	//    without error.  Provides error handling otherwise.  Does not leave chunk or error messages on the stack.
-	bool Execute(lua_State *L, _In_z_ const char *szCode);
+	//// Execute - Executes code from a string in the given lua state.  Returns true if the code compiled and executed
+	////    without error.  Provides error handling otherwise.  Does not leave chunk or error messages on the stack.
+	//bool Execute(lua_State *L, _In_z_ const char *szCode);
 
-	// LoadFile - Loads a lua file into the given lua state.  Returns true if the code compiled and executed
-	//   without error.  Provides error handling otherwise.  Does not leave chunk or error messages on the stack.
-	bool LoadFile(lua_State *L, _In_z_ const wchar_t *wszFilename);
+	//// LoadFile - Loads a lua file into the given lua state.  Returns true if the code compiled and executed
+	////   without error.  Provides error handling otherwise.  Does not leave chunk or error messages on the stack.
+	//bool LoadFile(lua_State *L, _In_z_ const wchar_t *wszFilename);
 
-	// GetField - Acts like lua_getfield but can handle nested tables with '.'s separating the field names.
-	void GetField(lua_State *L, int iTableIndex, const char *szName);
+	//// GetField - Acts like lua_getfield but can handle nested tables with '.'s separating the field names.
+	//void GetField(lua_State *L, int iTableIndex, const char *szName);
 
-	// GetGlobal - Acts like lua_getglobal but can handle nested tables with '.'s separating the field names.
-	static inline void GetGlobal(lua_State *L, _In_z_ const char *szName) { GetField(L, LUA_GLOBALSINDEX, szName); }
+	//// GetGlobal - Acts like lua_getglobal but can handle nested tables with '.'s separating the field names.
+	//static inline void GetGlobal(lua_State *L, _In_z_ const char *szName) { GetField(L, LUA_GLOBALSINDEX, szName); }
 
-	// LuaStackToString - Helpful for debugging.  Prints the lua stack to a string buffer.
-	void LuaStackToString(lua_State *L, char *szBuffer, size_t uiBufferSize);
+	//// LuaStackToString - Helpful for debugging.  Prints the lua stack to a string buffer.
+	//void LuaStackToString(lua_State *L, char *szBuffer, size_t uiBufferSize);
 
-	// ConsoleCommand - Execute a command specifically designed for a lua command console.  Takes in text
-	//   to execute as code and then writes output to output buffer.  Errors during ConsoleCommand are
-	//   sent to szOutput rather than the regular ErrorHandler for FLua.  Returns true if szInput executed without error.
-	bool ConsoleCommand(lua_State *L, _In_z_ const char *szInput, char *szOutput, size_t uiOutputSize);
+	//// ConsoleCommand - Execute a command specifically designed for a lua command console.  Takes in text
+	////   to execute as code and then writes output to output buffer.  Errors during ConsoleCommand are
+	////   sent to szOutput rather than the regular ErrorHandler for FLua.  Returns true if szInput executed without error.
+	//bool ConsoleCommand(lua_State *L, _In_z_ const char *szInput, char *szOutput, size_t uiOutputSize);
 
 	// FunctionDescription - Represents the description of a function
 	struct FunctionDescription
@@ -474,7 +474,7 @@ namespace FLua
 		template<> static inline lua_Number Get(lua_State *L, int idx) { return lua_tonumber(L, idx); }
 		template<> static inline float Get(lua_State *L, int idx) { return (float)lua_tonumber(L, idx); }
 		template<> static inline const char *Get(lua_State *L, int idx) { return lua_tostring(L, idx); }
-		template<> static inline StackValue Get(lua_State *L, int idx) { return StackValue(L, idx); }
+		// template<> static inline StackValue Get(lua_State *L, int idx) { return StackValue(L, idx); }
 
 		// PushCData - Allows the creation of CData to be overriden for certain types
 		template<class T> static void PushCData(lua_State *L, T *pVal)
@@ -510,7 +510,7 @@ namespace FLua
 		static inline void Push(lua_State *L, const lua_Number fVal) { lua_pushnumber(L, fVal); }
 		static inline void Push(lua_State *L, const float fVal) { lua_pushnumber(L, fVal); }
 		static inline void Push(lua_State *L, _In_z_ const char *szVal) { lua_pushstring(L, szVal); }
-		static inline void Push(lua_State *,  const StackValue kVal) { kVal.Push(); }
+		// static inline void Push(lua_State *,  const StackValue kVal) { kVal.Push(); }
 
 		// ArgValidator - Determines if an argument is valid.  Default case does nothing.
 		template<class T>
@@ -540,7 +540,7 @@ namespace FLua
 		struct ArgValidator<unsigned int>{
 			static inline void Validate(lua_Number &iArg, bool &bValid) {
 				if( iArg < 0 ) {
-					Error(_T("Bad argument: Negative number passed for uint"));
+					// Error(_T("Bad argument: Negative number passed for uint"));
 					bValid = false;
 				}
 			}
@@ -555,11 +555,11 @@ namespace FLua
 			static inline void Validate(const char *szArg, bool &bValid) {
 				size_t uiLength = strlen(szArg);
 				if( uiLength == 0 ) {
-					Error(_T("Bad argument: Empty string representing character."));
+					// Error(_T("Bad argument: Empty string representing character."));
 					bValid = false;
 				}
 				else if( uiLength > 1 ) {
-					Error(_T("Bad argument: \"%s\" passed to one character argument."), szArg);
+					// Error(_T("Bad argument: \"%s\" passed to one character argument."), szArg);
 					bValid = false;
 				}
 			}
@@ -654,8 +654,8 @@ namespace FLua
 			static const char *&Get() { static const char *szName = "Unknown_Type"; return szName; }
 		};
 
-		// FunctionToString - ToString function for functions.  Can be used to display the full function signature.
-		int FunctionToString(lua_State *L);
+		//// FunctionToString - ToString function for functions.  Can be used to display the full function signature.
+		//int FunctionToString(lua_State *L) { return 0; };
 
 		// PushCodeBuddyTable - Pushes the code buddy table.  Creates the table if it doesn't exist.
 		void PushCodeBuddyTable(lua_State *L);
@@ -687,7 +687,7 @@ namespace FLua
 		template<> static const char *DescribeType<const double>() { return "const double"; }
 		template<> static const char *DescribeType<char*>() { return "char"; } // Pointer notation added later
 		template<> static const char *DescribeType<const char*>() { return "const char"; }
-		template<> static const char *DescribeType<StackValue>() { return "variant"; }
+		// template<> static const char *DescribeType<StackValue>() { return "variant"; }
 
 		// PtrDescription - Used to add proper pointer or reference (&) notation to a described type.
 		template<class T> struct PtrDescription { static const char *Get() { return ""; } };
@@ -776,11 +776,11 @@ namespace FLua
 			SetToStringForFunc(L, &LuaInterface::ToString);
 		}
 
-		// CCallWithErrorHandling - Make a lua protected call to a c function with error handling automatically provided.
-		bool CCallWithErrorHandling(lua_State *L, lua_CFunction pfn, void *pvUserData = NULL);
+		//// CCallWithErrorHandling - Make a lua protected call to a c function with error handling automatically provided.
+		//bool CCallWithErrorHandling(lua_State *L, lua_CFunction pfn, void *pvUserData = NULL);
 
-		// HandleCPCallError - Used internally by MakeProtectedCall to handle errors
-		void HandleCPCallError(lua_State *L, int iCPCallResults);
+		//// HandleCPCallError - Used internally by MakeProtectedCall to handle errors
+		//void HandleCPCallError(lua_State *L, int iCPCallResults);
 	}
 
 	// MakeProtectedCall - Use this to call a C Function in lua protected mode.  The functions must return void
@@ -818,7 +818,8 @@ namespace FLua
 		};
 
 		CallStruct kCall(pfn); // Build the call object for this call
-		return Details::CCallWithErrorHandling(L, &CallStruct::Execute, &kCall); // Make the cp call
+		// return Details::CCallWithErrorHandling(L, &CallStruct::Execute, &kCall); // Make the cp call
+		CallStruct::Execute(L);
 	}
 
 	template<class TArg1, class TPassedArg1>

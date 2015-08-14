@@ -51,46 +51,46 @@ void* CvDllNetworkSyncronization::operator new(size_t bytes)
 //------------------------------------------------------------------------------
 void CvDllNetworkSyncronization::ClearCityDeltas()
 {
-	FSerialization::ClearCityDeltas();
+	//FSerialization::ClearCityDeltas();
 }
 //------------------------------------------------------------------------------
 void CvDllNetworkSyncronization::ClearPlayerDeltas()
 {
-	FSerialization::ClearPlayerDeltas();
+	//FSerialization::ClearPlayerDeltas();
 }
 //------------------------------------------------------------------------------
 void CvDllNetworkSyncronization::ClearPlotDeltas()
 {
-	FSerialization::ClearPlotDeltas();
+	//FSerialization::ClearPlotDeltas();
 }
 //------------------------------------------------------------------------------
 void CvDllNetworkSyncronization::ClearRandomDeltas()
 {
-	GC.getGame().getJonRand().clearCallstacks();
+	//GC.getGame().getJonRand().clearCallstacks();
 }
 //------------------------------------------------------------------------------
 void CvDllNetworkSyncronization::ClearUnitDeltas()
 {
-	FSerialization::ClearUnitDeltas();
+	//FSerialization::ClearUnitDeltas();
 }
 //------------------------------------------------------------------------------
 void CvDllNetworkSyncronization::SyncCities()
 {
-	FSerialization::SyncCities();
+	//FSerialization::SyncCities();
 }
 //------------------------------------------------------------------------------
 void CvDllNetworkSyncronization::SyncPlayers()
 {
-	FSerialization::SyncPlayer();
+	//FSerialization::SyncPlayer();
 }
 //------------------------------------------------------------------------------
 void CvDllNetworkSyncronization::SyncPlots()
 {
-	FSerialization::SyncPlots();
+	//FSerialization::SyncPlots();
 }
 //------------------------------------------------------------------------------
 void CvDllNetworkSyncronization::SyncUnits()
 {
-	FSerialization::SyncUnits();
+	//FSerialization::SyncUnits();
 }
 //------------------------------------------------------------------------------

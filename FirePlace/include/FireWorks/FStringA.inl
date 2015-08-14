@@ -985,7 +985,8 @@ inline void FStringA::Concat( LPCSTR lpszSource )
 inline uint FStringA::Hash( void ) const
 {
 	FSTRING_CHECK_BUFFER;
-	return ( g_CRC32.Calc( ( void* )m_pszString, GetLength() * sizeof ( char ) ) );
+	//return ( g_CRC32.Calc( ( void* )m_pszString, GetLength() * sizeof ( char ) ) );
+	return 0;
 }
 
 // Calculates a hash value for the string
@@ -993,7 +994,8 @@ inline uint FStringA::Hash( void ) const
 inline uint FStringA::Hash( LPCSTR pszStr )
 {
 	FAssert(pszStr != NULL);
-	return ( g_CRC32.Calc( ( void* )pszStr, SafeStrlen(pszStr) * sizeof ( char ) ) );
+	// return ( g_CRC32.Calc( ( void* )pszStr, SafeStrlen(pszStr) * sizeof ( char ) ) );
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

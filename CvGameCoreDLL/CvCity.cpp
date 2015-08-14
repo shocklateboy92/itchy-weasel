@@ -55,169 +55,65 @@ namespace
 namespace FSerialization
 {
 	std::set<CvCity *> citiesToCheck;
-	void SyncCities()
-	{
-		if(GC.getGame().isNetworkMultiPlayer())
-		{
-			PlayerTypes authoritativePlayer = GC.getGame().getActivePlayer();
+	//void SyncCities()
+	//{
+	//	if(GC.getGame().isNetworkMultiPlayer())
+	//	{
+	//		PlayerTypes authoritativePlayer = GC.getGame().getActivePlayer();
 
-			std::set<CvCity *>::const_iterator i;
-			for(i = citiesToCheck.begin(); i != citiesToCheck.end(); ++i)
-			{
-				const CvCity * city = *i;
+	//		std::set<CvCity *>::const_iterator i;
+	//		for(i = citiesToCheck.begin(); i != citiesToCheck.end(); ++i)
+	//		{
+	//			const CvCity * city = *i;
 
-				if(city)
-				{
-					const CvPlayer & player = GET_PLAYER(city->getOwner());
-					if(city->getOwner() == authoritativePlayer || (gDLL->IsHost() && !player.isHuman() && player.isAlive()))
-					{
-						const FAutoArchive & archive = city->getSyncArchive();
-						if(archive.hasDeltas())
-						{
-							FMemoryStream memoryStream;
-							std::vector<std::pair<std::string, std::string> > callStacks;
-							archive.saveDelta(memoryStream, callStacks);
-							gDLL->sendCitySyncCheck(city->getOwner(), city->GetID(), memoryStream, callStacks);
-						}
-					}
-				}
-			}
-		}
-	}
+	//			if(city)
+	//			{
+	//				const CvPlayer & player = GET_PLAYER(city->getOwner());
+	//				if(city->getOwner() == authoritativePlayer || (gDLL->IsHost() && !player.isHuman() && player.isAlive()))
+	//				{
+	//					/*const FAutoArchive & archive = city->getSyncArchive();
+	//					if(archive.hasDeltas())
+	//					{
+	//						FMemoryStream memoryStream;
+	//						std::vector<std::pair<std::string, std::string> > callStacks;
+	//						archive.saveDelta(memoryStream, callStacks);
+	//						gDLL->sendCitySyncCheck(city->getOwner(), city->GetID(), memoryStream, callStacks);
+	//					}*/
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
-	// clears ALL deltas for ALL units
-	void ClearCityDeltas()
-	{
-		std::set<CvCity *>::iterator i;
-		for(i = citiesToCheck.begin(); i != citiesToCheck.end(); ++i)
-		{
-			CvCity * city = *i;
+	//// clears ALL deltas for ALL units
+	//void ClearCityDeltas()
+	//{
+	//	std::set<CvCity *>::iterator i;
+	//	for(i = citiesToCheck.begin(); i != citiesToCheck.end(); ++i)
+	//	{
+	//		CvCity * city = *i;
 
-			if(city)
-			{
-				FAutoArchive & archive = city->getSyncArchive();
-				archive.clearDelta();
-			}
-		}
-	}
+	//		if(city)
+	//		{
+	//			FAutoArchive & archive = city->getSyncArchive();
+	//			archive.clearDelta();
+	//		}
+	//	}
+	//}
 }
 
 //	--------------------------------------------------------------------------------
 // Public Functions...
 CvCity::CvCity() :
-m_syncArchive(*this)
-, m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility("CvCity::m_strName", m_syncArchive, "")
-, m_eOwner("CvCity::m_eOwner", m_syncArchive, NO_PLAYER)
-, m_iX("CvCity::m_iX", m_syncArchive)
-, m_iY("CvCity::m_iY", m_syncArchive)
-, m_iID("CvCity::m_iID", m_syncArchive)
-, m_iRallyX("CvCity::m_iRallyX", m_syncArchive)
-, m_iRallyY("CvCity::m_iRallyY", m_syncArchive)
-, m_iGameTurnFounded("CvCity::m_iGameTurnFounded", m_syncArchive)
-, m_iGameTurnAcquired("CvCity::m_iGameTurnAcquired", m_syncArchive)
-, m_iGameTurnLastExpanded("CvCity::m_iGameTurnLastExpanded", m_syncArchive)
-, m_iPopulation("CvCity::m_iPopulation", m_syncArchive)
-, m_iHighestPopulation("CvCity::m_iHighestPopulation", m_syncArchive)
-, m_iNumGreatPeople("CvCity::m_iNumGreatPeople", m_syncArchive)
-, m_iBaseGreatPeopleRate("CvCity::m_iBaseGreatPeopleRate", m_syncArchive)
-, m_iGreatPeopleRateModifier("CvCity::m_iGreatPeopleRateModifier", m_syncArchive)
-, m_iGreatPeopleProgress("CvCity::m_iGreatPeopleProgress", m_syncArchive)
-, m_iJONSCultureStored("CvCity::m_iJONSCultureStored", m_syncArchive, true)
-, m_iJONSCultureLevel("CvCity::m_iJONSCultureLevel", m_syncArchive)
-, m_iJONSCulturePerTurnFromBuildings("CvCity::m_iJONSCulturePerTurnFromBuildings", m_syncArchive)
-, m_iJONSCulturePerTurnFromPolicies("CvCity::m_iJONSCulturePerTurnFromPolicies", m_syncArchive)
-, m_iJONSCulturePerTurnFromSpecialists("CvCity::m_iJONSCulturePerTurnFromSpecialists", m_syncArchive)
-, m_iJONSCulturePerTurnFromTerrain("CvCity::m_iJONSCulturePerTurnFromTerrain", m_syncArchive)
-, m_iCultureRateModifier("CvCity::m_iCultureRateModifier", m_syncArchive)
-, m_iNumWorldWonders("CvCity::m_iNumWorldWonders", m_syncArchive)
-, m_iNumTeamWonders("CvCity::m_iNumTeamWonders", m_syncArchive)
-, m_iNumNationalWonders("CvCity::m_iNumNationalWonders", m_syncArchive)
-, m_iWonderProductionModifier("CvCity::m_iWonderProductionModifier", m_syncArchive)
-, m_iCapturePlunderModifier("CvCity::m_iCapturePlunderModifier", m_syncArchive)
-, m_iPlotCultureCostModifier("CvCity::m_iPlotCultureCostModifier", m_syncArchive)
+m_eOwner(NO_PLAYER)
+, m_iJONSCultureStored(true)
 , m_iPlotBuyCostModifier(0)
-, m_iMaintenance("CvCity::m_iMaintenance", m_syncArchive)
-, m_iHealRate("CvCity::m_iHealRate", m_syncArchive)
-, m_iNoOccupiedUnhappinessCount("CvCity::m_iNoOccupiedUnhappinessCount", m_syncArchive)
-, m_iFood("CvCity::m_iFood", m_syncArchive)
-, m_iFoodKept("CvCity::m_iFoodKept", m_syncArchive)
-, m_iMaxFoodKeptPercent("CvCity::m_iMaxFoodKeptPercent", m_syncArchive)
-, m_iOverflowProduction("CvCity::m_iOverflowProduction", m_syncArchive)
-, m_iFeatureProduction("CvCity::m_iFeatureProduction", m_syncArchive)
-, m_iMilitaryProductionModifier("CvCity::m_iMilitaryProductionModifier", m_syncArchive)
-, m_iSpaceProductionModifier("CvCity::m_iSpaceProductionModifier", m_syncArchive)
-, m_iFreeExperience("CvCity::m_iFreeExperience", m_syncArchive)
-, m_iCurrAirlift("CvCity::m_iCurrAirlift", m_syncArchive)
-, m_iMaxAirlift("CvCity::m_iMaxAirlift", m_syncArchive)
-, m_iAirModifier("CvCity::m_iAirModifier", m_syncArchive)
-, m_iNukeModifier("CvCity::m_iNukeModifier", m_syncArchive)
-, m_iCultureUpdateTimer("CvCity::m_iCultureUpdateTimer", m_syncArchive)	// unused
-, m_iCitySizeBoost("CvCity::m_iCitySizeBoost", m_syncArchive)
-, m_iSpecialistFreeExperience("CvCity::m_iSpecialistFreeExperience", m_syncArchive)
-, m_iStrengthValue("CvCity::m_iStrengthValue", m_syncArchive, true)
-, m_iDamage("CvCity::m_iDamage", m_syncArchive)
-, m_iThreatValue("CvCity::m_iThreatValue", m_syncArchive, true)
-, m_iGarrisonedUnit("CvCity::m_iGarrisonedUnit", m_syncArchive)
-, m_iResourceDemanded("CvCity::m_iResourceDemanded", m_syncArchive)
-, m_iWeLoveTheKingDayCounter("CvCity::m_iWeLoveTheKingDayCounter", m_syncArchive)
-, m_iLastTurnGarrisonAssigned("CvCity::m_iLastTurnGarrisonAssigned", m_syncArchive)
-, m_iThingsProduced("CvCity::m_iThingsProduced", m_syncArchive)
-, m_iDemandResourceCounter("CvCity::m_iDemandResourceCounter", m_syncArchive, true)
-, m_iResistanceTurns("CvCity::m_iResistanceTurns", m_syncArchive)
-, m_iRazingTurns("CvCity::m_iRazingTurns", m_syncArchive)
-, m_iCountExtraLuxuries("CvCity::m_iCountExtraLuxuries", m_syncArchive)
-, m_iCheapestPlotInfluence("CvCity::m_iCheapestPlotInfluence", m_syncArchive)
+, m_iStrengthValue(true)
+, m_iThreatValue(true)
+, m_iDemandResourceCounter(true)
 , m_unitBeingBuiltForOperation()
-, m_bNeverLost("CvCity::m_bNeverLost", m_syncArchive)
-, m_bDrafted("CvCity::m_bDrafted", m_syncArchive)
-, m_bAirliftTargeted("CvCity::m_bAirliftTargeted", m_syncArchive)
-, m_bProductionAutomated("CvCity::m_bProductionAutomated", m_syncArchive)
-, m_bLayoutDirty("CvCity::m_bLayoutDirty", m_syncArchive)
-, m_bMadeAttack("CvCity::m_bMadeAttack", m_syncArchive)
-, m_bOccupied("CvCity::m_bOccupied", m_syncArchive)
-, m_bPuppet("CvCity::m_bPuppet", m_syncArchive)
-, m_bEverCapital("CvCity::m_bEverCapital", m_syncArchive)
-, m_bIndustrialRouteToCapital("CvCity::m_bIndustrialRouteToCapital", m_syncArchive)
-, m_bFeatureSurrounded("CvCity::m_bFeatureSurrounded", m_syncArchive)
-, m_ePreviousOwner("CvCity::m_ePreviousOwner", m_syncArchive)
-, m_eOriginalOwner("CvCity::m_eOriginalOwner", m_syncArchive)
-, m_ePlayersReligion("CvCity::m_ePlayersReligion", m_syncArchive)
-, m_aiSeaPlotYield("CvCity::m_aiSeaPlotYield", m_syncArchive)
-, m_aiRiverPlotYield("CvCity::m_aiRiverPlotYield", m_syncArchive)
-, m_aiLakePlotYield("CvCity::m_aiLakePlotYield", m_syncArchive)
-, m_aiSeaResourceYield("CvCity::m_aiSeaResourceYield", m_syncArchive)
-, m_aiBaseYieldRateFromTerrain("CvCity::m_aiBaseYieldRateFromTerrain", m_syncArchive, true)
-, m_aiBaseYieldRateFromBuildings("CvCity::m_aiBaseYieldRateFromBuildings", m_syncArchive)
-, m_aiBaseYieldRateFromSpecialists("CvCity::m_aiBaseYieldRateFromSpecialists", m_syncArchive)
-, m_aiBaseYieldRateFromMisc("CvCity::m_aiBaseYieldRateFromMisc", m_syncArchive)
-, m_aiYieldRateModifier("CvCity::m_aiYieldRateModifier", m_syncArchive)
-, m_aiYieldPerPop("CvCity::m_aiYieldPerPop", m_syncArchive)
-, m_aiPowerYieldRateModifier("CvCity::m_aiPowerYieldRateModifier", m_syncArchive)
-, m_aiResourceYieldRateModifier("CvCity::m_aiResourceYieldRateModifier", m_syncArchive)
-, m_aiExtraSpecialistYield("CvCity::m_aiExtraSpecialistYield", m_syncArchive)
-, m_aiProductionToYieldModifier("CvCity::m_aiProductionToYieldModifier", m_syncArchive)
-, m_aiDomainFreeExperience("CvCity::m_aiDomainFreeExperience", m_syncArchive)
-, m_aiDomainProductionModifier("CvCity::m_aiDomainProductionModifier", m_syncArchive)
-, m_abEverOwned("CvCity::m_abEverOwned", m_syncArchive)
-, m_abRevealed("CvCity::m_abRevealed", m_syncArchive, true)
-, m_strScriptData("CvCity::m_strScriptData", m_syncArchive)
-, m_paiNoResource("CvCity::m_paiNoResource", m_syncArchive)
-, m_paiFreeResource("CvCity::m_paiFreeResource", m_syncArchive)
-, m_paiNumResourcesLocal("CvCity::m_paiNumResourcesLocal", m_syncArchive)
-, m_paiProjectProduction("CvCity::m_paiProjectProduction", m_syncArchive)
-, m_paiSpecialistProduction("CvCity::m_paiSpecialistProduction", m_syncArchive)
-, m_paiUnitProduction("CvCity::m_paiUnitProduction", m_syncArchive)
-, m_paiUnitProductionTime("CvCity::m_paiUnitProductionTime", m_syncArchive)
-, m_paiGreatPeopleUnitRate("CvCity::m_paiGreatPeopleUnitRate", m_syncArchive)
-, m_paiGreatPeopleUnitProgress("CvCity::m_paiGreatPeopleUnitProgress", m_syncArchive)
-, m_paiSpecialistCount("CvCity::m_paiSpecialistCount", m_syncArchive)
-, m_paiMaxSpecialistCount("CvCity::m_paiMaxSpecialistCount", m_syncArchive)
-, m_paiForceSpecialistCount("CvCity::m_paiForceSpecialistCount", m_syncArchive)
-, m_paiFreeSpecialistCount("CvCity::m_paiFreeSpecialistCount", m_syncArchive)
-, m_paiImprovementFreeSpecialists("CvCity::m_paiImprovementFreeSpecialists", m_syncArchive)
-, m_paiUnitCombatFreeExperience("CvCity::m_paiUnitCombatFreeExperience", m_syncArchive)
-, m_paiUnitCombatProductionModifier("CvCity::m_paiUnitCombatProductionModifier", m_syncArchive)
-, m_paiFreePromotionCount("CvCity::m_paiFreePromotionCount", m_syncArchive)
+, m_aiBaseYieldRateFromTerrain(true)
+, m_abRevealed(true)
 , m_iBaseHappinessFromBuildings(0)
 , m_iUnmoddedHappinessFromBuildings(0)
 , m_bRouteToCapitalConnectedLastTurn(false)
@@ -234,10 +130,6 @@ m_syncArchive(*this)
 , m_bombardCheckTurn(0)
 , m_iPopulationRank(0)
 , m_bPopulationRankValid(false)
-, m_aiBaseYieldRank("CvCity::m_aiBaseYieldRank", m_syncArchive)
-, m_abBaseYieldRankValid("CvCity::m_abBaseYieldRankValid", m_syncArchive)
-, m_aiYieldRank("CvCity::m_aiYieldRank", m_syncArchive)
-, m_abYieldRankValid("CvCity::m_abYieldRankValid", m_syncArchive)
 {
 	OBJECT_ALLOCATED
 	FSerialization::citiesToCheck.insert(this);
@@ -540,7 +432,7 @@ void CvCity::uninit()
 void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructorCall)
 {
 	VALIDATE_OBJECT
-	m_syncArchive.reset();
+	//m_syncArchive.reset();
 
 	int iI;
 
@@ -643,40 +535,40 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 	m_aiProductionToYieldModifier.resize(NUM_YIELD_TYPES);
 	for (iI = 0; iI < NUM_YIELD_TYPES; iI++)
 	{
-		m_aiSeaPlotYield.setAt(iI, 0);
-		m_aiRiverPlotYield.setAt(iI, 0);
-		m_aiLakePlotYield.setAt(iI, 0);
-		m_aiSeaResourceYield.setAt(iI, 0);
-		m_aiBaseYieldRateFromTerrain.setAt(iI, 0);
-		m_aiBaseYieldRateFromBuildings.setAt(iI, 0);
-		m_aiBaseYieldRateFromSpecialists.setAt(iI, 0);
-		m_aiBaseYieldRateFromMisc.setAt(iI, 0);
-		m_aiYieldPerPop.setAt(iI, 0);
-		m_aiYieldRateModifier.setAt(iI, 0);
-		m_aiPowerYieldRateModifier.setAt(iI, 0);
-		m_aiResourceYieldRateModifier.setAt(iI, 0);
-		m_aiExtraSpecialistYield.setAt(iI, 0);
-		m_aiProductionToYieldModifier.setAt(iI, 0);
+		m_aiSeaPlotYield[iI] = 0;
+		m_aiRiverPlotYield[iI] = 0;
+		m_aiLakePlotYield[iI] = 0;
+		m_aiSeaResourceYield[iI] = 0;
+		m_aiBaseYieldRateFromTerrain[iI] = 0;
+		m_aiBaseYieldRateFromBuildings[iI] = 0;
+		m_aiBaseYieldRateFromSpecialists[iI] = 0;
+		m_aiBaseYieldRateFromMisc[iI] = 0;
+		m_aiYieldPerPop[iI] = 0;
+		m_aiYieldRateModifier[iI] = 0;
+		m_aiPowerYieldRateModifier[iI] = 0;
+		m_aiResourceYieldRateModifier[iI] = 0;
+		m_aiExtraSpecialistYield[iI] = 0;
+		m_aiProductionToYieldModifier[iI] = 0;
 	}
 
 	m_aiDomainFreeExperience.resize(NUM_DOMAIN_TYPES);
 	m_aiDomainProductionModifier.resize(NUM_DOMAIN_TYPES);
 	for (iI = 0; iI < NUM_DOMAIN_TYPES; iI++)
 	{
-		m_aiDomainFreeExperience.setAt(iI, 0);
-		m_aiDomainProductionModifier.setAt(iI, 0);
+		m_aiDomainFreeExperience[iI] = 0;
+		m_aiDomainProductionModifier[iI] = 0;
 	}
 
 	m_abEverOwned.resize(REALLY_MAX_PLAYERS);
 	for (iI = 0; iI < REALLY_MAX_PLAYERS; iI++)
 	{
-		m_abEverOwned.setAt(iI, false);
+		m_abEverOwned[iI] = false;
 	}
 
 	m_abRevealed.resize(REALLY_MAX_TEAMS);
 	for (iI = 0; iI < REALLY_MAX_TEAMS; iI++)
 	{
-		m_abRevealed.setAt(iI, false);
+		m_abRevealed[iI] = false;
 	}
 
 	m_strName = "";
@@ -692,10 +584,10 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 	m_aiYieldRank.resize(NUM_YIELD_TYPES);
 	for (iI = 0; iI < NUM_YIELD_TYPES; iI++)
 	{
-		m_abBaseYieldRankValid.setAt(iI, false);
-		m_abYieldRankValid.setAt(iI, false);
-		m_aiBaseYieldRank.setAt(iI, -1);
-		m_aiYieldRank.setAt(iI, -1);
+		m_abBaseYieldRankValid[iI] = false;
+		m_abYieldRankValid[iI] = false;
+		m_aiBaseYieldRank[iI] = -1;
+		m_aiYieldRank[iI] = -1;
 	}
 
 	if (!bConstructorCall)
@@ -707,23 +599,23 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 		m_paiNumResourcesLocal.clear(); m_paiNumResourcesLocal.resize(iNumResources);
 		for (iI = 0; iI < iNumResources; iI++)
 		{
-			m_paiNoResource.setAt(iI, 0);
-			m_paiFreeResource.setAt(iI, 0);
-			m_paiNumResourcesLocal.setAt(iI, 0);
+			m_paiNoResource[iI] = 0;
+			m_paiFreeResource[iI] = 0;
+			m_paiNumResourcesLocal[iI] = 0;
 		}
 
 		int iNumProjectInfos = GC.getNumProjectInfos();
 		m_paiProjectProduction.clear(); m_paiProjectProduction.resize(iNumProjectInfos);
 		for (iI = 0; iI < iNumProjectInfos; iI++)
 		{
-			m_paiProjectProduction.setAt(iI, 0);
+			m_paiProjectProduction[iI] = 0;
 		}
 
 		int iNumSpecialistInfos = GC.getNumSpecialistInfos();
 		m_paiSpecialistProduction.clear(); m_paiSpecialistProduction.resize(iNumSpecialistInfos);
 		for (iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 		{
-			m_paiSpecialistProduction.setAt(iI, 0);
+			m_paiSpecialistProduction[iI] = 0;
 		}
 
 		m_pCityBuildings->Init (GC.GetGameBuildings(), this);
@@ -736,10 +628,10 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 		m_paiGreatPeopleUnitProgress.clear(); m_paiGreatPeopleUnitProgress.resize(iNumUnitInfos);
 		for (iI = 0;iI < iNumUnitInfos;iI++)
 		{
-			m_paiUnitProduction.setAt(iI, 0);
-			m_paiUnitProductionTime.setAt(iI, 0);
-			m_paiGreatPeopleUnitRate.setAt(iI, 0);
-			m_paiGreatPeopleUnitProgress.setAt(iI, 0);
+			m_paiUnitProduction[iI] = 0;
+			m_paiUnitProductionTime[iI] = 0;
+			m_paiGreatPeopleUnitRate[iI] = 0;
+			m_paiGreatPeopleUnitProgress[iI] = 0;
 		}
 
 		CvAssertMsg((0 < iNumSpecialistInfos),  "GC.getNumSpecialistInfos() is not greater than zero but an array is being allocated in CvCity::reset");
@@ -750,10 +642,10 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 
 		for (iI = 0; iI < iNumSpecialistInfos; iI++)
 		{
-			m_paiSpecialistCount.setAt(iI, 0);
-			m_paiMaxSpecialistCount.setAt(iI, 0);
-			m_paiForceSpecialistCount.setAt(iI, 0);
-			m_paiFreeSpecialistCount.setAt(iI, 0);
+			m_paiSpecialistCount[iI] = 0;
+			m_paiMaxSpecialistCount[iI] = 0;
+			m_paiForceSpecialistCount[iI] = 0;
+			m_paiFreeSpecialistCount[iI] = 0;
 		}
 
 		int iNumImprovementInfos = GC.getNumImprovementInfos();
@@ -761,7 +653,7 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 		m_paiImprovementFreeSpecialists.clear(); m_paiImprovementFreeSpecialists.resize(iNumImprovementInfos);
 		for (iI = 0; iI < iNumImprovementInfos; iI++)
 		{
-			m_paiImprovementFreeSpecialists.setAt(iI, 0);
+			m_paiImprovementFreeSpecialists[iI] = 0;
 		}
 
 		int iNumUnitCombatClassInfos = GC.getNumUnitCombatClassInfos();
@@ -770,8 +662,8 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 		m_paiUnitCombatProductionModifier.clear(); m_paiUnitCombatProductionModifier.resize(iNumUnitCombatClassInfos);
 		for (iI = 0; iI < iNumUnitCombatClassInfos; iI++)
 		{
-			m_paiUnitCombatFreeExperience.setAt(iI, 0);
-			m_paiUnitCombatProductionModifier.setAt(iI, 0);
+			m_paiUnitCombatFreeExperience[iI] = 0;
+			m_paiUnitCombatProductionModifier[iI] = 0;
 		}
 
 		int iNumPromotionInfos = GC.getNumPromotionInfos();
@@ -779,7 +671,7 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 		m_paiFreePromotionCount.clear(); m_paiFreePromotionCount.resize(iNumPromotionInfos);
 		for (iI = 0; iI < iNumPromotionInfos; iI++)
 		{
-			m_paiFreePromotionCount.setAt(iI, 0);
+			m_paiFreePromotionCount[iI] = 0;
 		}
 
 		int iJ;
@@ -1888,8 +1780,8 @@ int CvCity::findBaseYieldRateRank(YieldTypes eYield)
 			}
 		}
 
-		m_abBaseYieldRankValid.setAt(eYield, true);
-		m_aiBaseYieldRank.setAt(eYield, iRank);
+		m_abBaseYieldRankValid[eYield] = true;
+		m_aiBaseYieldRank[eYield] = iRank;
 	}
 
 	return m_aiBaseYieldRank[eYield];
@@ -1916,8 +1808,8 @@ int CvCity::findYieldRateRank(YieldTypes eYield)
 			}
 		}
 
-		m_abYieldRankValid.setAt(eYield, true);
-		m_aiYieldRank.setAt(eYield, iRank);
+		m_abYieldRankValid[eYield] = true;
+		m_aiYieldRank[eYield] = iRank;
 	}
 
 	return m_aiYieldRank[eYield];
@@ -2681,8 +2573,8 @@ void CvCity::ChangeNumResourceLocal(ResourceTypes eResource, int iChange)
 	{
 		bool bOldHasResource = IsHasResourceLocal(eResource, /*bTestVisible*/ false);
 
-		m_paiNumResourcesLocal.setAt(eResource, m_paiNumResourcesLocal[eResource] + iChange);
-
+		m_paiNumResourcesLocal[eResource] = m_paiNumResourcesLocal[eResource] + iChange;
+		
 		if (bOldHasResource != IsHasResourceLocal(eResource, /*bTestVisible*/ false))
 		{
 			if (IsHasResourceLocal(eResource, /*bTestVisible*/ false))
@@ -2804,7 +2696,7 @@ bool CvCity::IsBuildingLocalResourceValid(BuildingTypes eBuilding, bool bTestVis
 ResourceTypes CvCity::GetResourceDemanded(bool bHideUnknown) const
 {
 	VALIDATE_OBJECT
-	ResourceTypes eResourceDemanded = static_cast<ResourceTypes>(m_iResourceDemanded.get());
+	ResourceTypes eResourceDemanded = static_cast<ResourceTypes>(m_iResourceDemanded);
 
 	// If we're not hiding the result then don't bother with looking at tech
 	if (!bHideUnknown)
@@ -7804,7 +7696,7 @@ void CvCity::changeSeaPlotYield(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiSeaPlotYield.setAt(eIndex, m_aiSeaPlotYield[eIndex] + iChange);
+		m_aiSeaPlotYield[eIndex] = m_aiSeaPlotYield[eIndex] + iChange;
 		CvAssert(getSeaPlotYield(eIndex) >= 0);
 
 		updateYield();
@@ -7829,7 +7721,7 @@ void CvCity::changeRiverPlotYield(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiRiverPlotYield.setAt(eIndex, m_aiRiverPlotYield[eIndex] + iChange);
+		m_aiRiverPlotYield[eIndex] = m_aiRiverPlotYield[eIndex] + iChange;
 		CvAssert(getRiverPlotYield(eIndex) >= 0);
 
 		updateYield();
@@ -7855,7 +7747,7 @@ void CvCity::changeLakePlotYield(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiLakePlotYield.setAt(eIndex, m_aiLakePlotYield[eIndex] + iChange);
+		m_aiLakePlotYield[eIndex] = m_aiLakePlotYield[eIndex] + iChange;
 		CvAssert(getLakePlotYield(eIndex) >= 0);
 
 		updateYield();
@@ -7881,7 +7773,7 @@ void CvCity::changeSeaResourceYield(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiSeaResourceYield.setAt(eIndex, m_aiSeaResourceYield[eIndex] + iChange);
+		m_aiSeaResourceYield[eIndex] = m_aiSeaResourceYield[eIndex] + iChange;
 		CvAssert(getSeaResourceYield(eIndex) >= 0);
 
 		updateYield();
@@ -8056,8 +7948,8 @@ void CvCity::ChangeBaseYieldRateFromTerrain(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiBaseYieldRateFromTerrain.setAt(eIndex, m_aiBaseYieldRateFromTerrain[eIndex] + iChange);
-
+		m_aiBaseYieldRateFromTerrain[eIndex] = m_aiBaseYieldRateFromTerrain[eIndex] + iChange;
+		
 		// JAR - debugging
 		s_lastYieldUsedToUpdateRateFromTerrain = eIndex;
 		s_changeYieldFromTerreain = iChange;
@@ -8094,8 +7986,8 @@ void CvCity::ChangeBaseYieldRateFromBuildings(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiBaseYieldRateFromBuildings.setAt(eIndex, m_aiBaseYieldRateFromBuildings[eIndex] + iChange);
-
+		m_aiBaseYieldRateFromBuildings[eIndex] = m_aiBaseYieldRateFromBuildings[eIndex] + iChange;
+		
 		if (getTeam() == GC.getGame().getActiveTeam())
 		{
 			if (isCitySelected())
@@ -8127,8 +8019,8 @@ void CvCity::ChangeBaseYieldRateFromSpecialists(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiBaseYieldRateFromSpecialists.setAt(eIndex, m_aiBaseYieldRateFromSpecialists[eIndex] + iChange);
-
+		m_aiBaseYieldRateFromSpecialists[eIndex] = m_aiBaseYieldRateFromSpecialists[eIndex] + iChange;
+		
 		if (getTeam() == GC.getGame().getActiveTeam())
 		{
 			if (isCitySelected())
@@ -8160,8 +8052,8 @@ void CvCity::ChangeBaseYieldRateFromMisc(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiBaseYieldRateFromMisc.setAt(eIndex, m_aiBaseYieldRateFromMisc[eIndex] + iChange);
-
+		m_aiBaseYieldRateFromMisc[eIndex] = m_aiBaseYieldRateFromMisc[eIndex] + iChange;
+		
 		if (getTeam() == GC.getGame().getActiveTeam())
 		{
 			if (isCitySelected())
@@ -8192,7 +8084,7 @@ void CvCity::ChangeYieldPerPopTimes100(YieldTypes eIndex, int iChange)
 	CvAssertMsg(eIndex < NUM_YIELD_TYPES, "eIndex expected to be < NUM_YIELD_TYPES");
 
 	if (iChange != 0)
-		m_aiYieldPerPop.setAt(eIndex, m_aiYieldPerPop[eIndex] + iChange);
+		m_aiYieldPerPop[eIndex] = m_aiYieldPerPop[eIndex] + iChange;
 }
 
 //	--------------------------------------------------------------------------------
@@ -8214,7 +8106,7 @@ void CvCity::changeYieldRateModifier(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiYieldRateModifier.setAt(eIndex, m_aiYieldRateModifier[eIndex] + iChange);
+		m_aiYieldRateModifier[eIndex] = m_aiYieldRateModifier[eIndex] + iChange;
 		CvAssert(getYieldRate(eIndex) >= 0);
 
 		GET_PLAYER(getOwner()).invalidateYieldRankCache(eIndex);
@@ -8241,7 +8133,7 @@ void CvCity::changeResourceYieldRateModifier(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiResourceYieldRateModifier.setAt(eIndex, m_aiResourceYieldRateModifier[eIndex] + iChange);
+		m_aiResourceYieldRateModifier[eIndex] = m_aiResourceYieldRateModifier[eIndex] + iChange;
 		CvAssert(getYieldRate(eIndex) >= 0);
 
 		GET_PLAYER(getOwner()).invalidateYieldRankCache(eIndex);
@@ -8299,7 +8191,7 @@ void CvCity::updateExtraSpecialistYield(YieldTypes eYield)
 
 	if (iOldYield != iNewYield)
 	{
-		m_aiExtraSpecialistYield.setAt(eYield, iNewYield);
+		m_aiExtraSpecialistYield[eYield] = iNewYield;
 		CvAssert(getExtraSpecialistYield(eYield) >= 0);
 
 		ChangeBaseYieldRateFromSpecialists(eYield, (iNewYield - iOldYield));
@@ -8339,7 +8231,7 @@ void CvCity::changeProductionToYieldModifier(YieldTypes eIndex, int iChange)
 
 	if (iChange != 0)
 	{
-		m_aiProductionToYieldModifier.setAt(eIndex, m_aiProductionToYieldModifier[eIndex] + iChange);
+		m_aiProductionToYieldModifier[eIndex] = m_aiProductionToYieldModifier[eIndex] + iChange;
 	}
 }
 
@@ -8359,7 +8251,7 @@ void CvCity::changeDomainFreeExperience(DomainTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < NUM_DOMAIN_TYPES, "eIndex expected to be < NUM_DOMAIN_TYPES");
-	m_aiDomainFreeExperience.setAt(eIndex, m_aiDomainFreeExperience[eIndex] + iChange);
+	m_aiDomainFreeExperience[eIndex] = m_aiDomainFreeExperience[eIndex] + iChange;
 	CvAssert(getDomainFreeExperience(eIndex) >= 0);
 }
 
@@ -8380,7 +8272,7 @@ void CvCity::changeDomainProductionModifier(DomainTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < NUM_DOMAIN_TYPES, "eIndex expected to be < NUM_DOMAIN_TYPES");
-	m_aiDomainProductionModifier.setAt(eIndex, m_aiDomainProductionModifier[eIndex] + iChange);
+	m_aiDomainProductionModifier[eIndex] = m_aiDomainProductionModifier[eIndex] + iChange;
 }
 
 
@@ -8400,7 +8292,7 @@ void CvCity::setEverOwned(PlayerTypes eIndex, bool bNewValue)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < MAX_PLAYERS, "eIndex expected to be < MAX_PLAYERS");
-	m_abEverOwned.setAt(eIndex, bNewValue);
+	m_abEverOwned[eIndex] = bNewValue;
 }
 
 //	--------------------------------------------------------------------------------
@@ -8433,8 +8325,8 @@ bool CvCity::setRevealed(TeamTypes eIndex, bool bNewValue)
 
 	if (isRevealed(eIndex, false) != bNewValue)
 	{
-		m_abRevealed.setAt(eIndex, bNewValue);
-
+		m_abRevealed[eIndex] = bNewValue;
+		
 		if (eIndex == GC.getGame().getActiveTeam())
 		{
 			for (iI = 0; iI < NUM_CITY_PLOTS; iI++)
@@ -8573,7 +8465,7 @@ void CvCity::setProjectProductionTimes100(ProjectTypes eIndex, int iNewValue)
 
 	if (getProjectProductionTimes100(eIndex) != iNewValue)
 	{
-		m_paiProjectProduction.setAt(eIndex, iNewValue);
+		m_paiProjectProduction[eIndex] = iNewValue;
 		CvAssert(getProjectProductionTimes100(eIndex) >= 0);
 
 		if ((getOwner() == GC.getGame().getActivePlayer()) && isCitySelected())
@@ -8641,7 +8533,7 @@ void CvCity::setSpecialistProductionTimes100(SpecialistTypes eIndex, int iNewVal
 
 	if (getSpecialistProductionTimes100(eIndex) != iNewValue)
 	{
-		m_paiSpecialistProduction.setAt(eIndex, iNewValue);
+		m_paiSpecialistProduction[eIndex] = iNewValue;
 		CvAssert(getSpecialistProductionTimes100(eIndex) >= 0);
 
 		if ((getOwner() == GC.getGame().getActivePlayer()) && isCitySelected())
@@ -8716,7 +8608,7 @@ void CvCity::setUnitProductionTimes100(UnitTypes eIndex, int iNewValue)
 
 	if (getUnitProductionTimes100(eIndex) != iNewValue)
 	{
-		m_paiUnitProduction.setAt(eIndex, iNewValue);
+		m_paiUnitProduction[eIndex] = iNewValue;
 		CvAssert(getUnitProductionTimes100(eIndex) >= 0);
 
 		if ((getOwner() == GC.getGame().getActivePlayer()) && isCitySelected())
@@ -8754,7 +8646,7 @@ void CvCity::setUnitProductionTime(UnitTypes eIndex, int iNewValue)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < GC.getNumUnitInfos(), "eIndex expected to be < GC.getNumUnitInfos()");
-	m_paiUnitProductionTime.setAt(eIndex, iNewValue);
+	m_paiUnitProductionTime[eIndex] = iNewValue;
 	CvAssert(getUnitProductionTime(eIndex) >= 0);
 }
 
@@ -8783,7 +8675,7 @@ void CvCity::setGreatPeopleUnitRate(UnitTypes eIndex, int iNewValue)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < GC.getNumUnitInfos(), "eIndex expected to be < GC.getNumUnitInfos()");
-	m_paiGreatPeopleUnitRate.setAt(eIndex, iNewValue);
+	m_paiGreatPeopleUnitRate[eIndex] = iNewValue;
 	CvAssert(getGreatPeopleUnitRate(eIndex) >= 0);
 }
 
@@ -8812,7 +8704,7 @@ void CvCity::setGreatPeopleUnitProgress(UnitTypes eIndex, int iNewValue)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < GC.getNumUnitInfos(), "eIndex expected to be < GC.getNumUnitInfos()");
-	m_paiGreatPeopleUnitProgress.setAt(eIndex, iNewValue);
+	m_paiGreatPeopleUnitProgress[eIndex] = iNewValue;
 	CvAssert(getGreatPeopleUnitProgress(eIndex) >= 0);
 }
 
@@ -8841,7 +8733,7 @@ void CvCity::changeUnitCombatFreeExperience(UnitCombatTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < GC.getNumUnitCombatClassInfos(), "eIndex expected to be < GC.getNumUnitCombatInfos()");
-	m_paiUnitCombatFreeExperience.setAt(eIndex, m_paiUnitCombatFreeExperience[eIndex] + iChange);
+	m_paiUnitCombatFreeExperience[eIndex] = m_paiUnitCombatFreeExperience[eIndex] + iChange;
 	CvAssert(getUnitCombatFreeExperience(eIndex) >= 0);
 }
 
@@ -8862,7 +8754,7 @@ void CvCity::changeUnitCombatProductionModifier(UnitCombatTypes eIndex, int iCha
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < GC.getNumUnitCombatClassInfos(), "eIndex expected to be < GC.getNumUnitCombatInfos()");
-	m_paiUnitCombatProductionModifier.setAt(eIndex, m_paiUnitCombatProductionModifier[eIndex] + iChange);
+	m_paiUnitCombatProductionModifier[eIndex] = m_paiUnitCombatProductionModifier[eIndex] + iChange;
 	CvAssert(getUnitCombatProductionModifier(eIndex) >= 0);
 }
 
@@ -8891,7 +8783,7 @@ void CvCity::changeFreePromotionCount(PromotionTypes eIndex, int iChange)
 	VALIDATE_OBJECT
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < GC.getNumPromotionInfos(), "eIndex expected to be < GC.getNumPromotionInfos()");
-	m_paiFreePromotionCount.setAt(eIndex, m_paiFreePromotionCount[eIndex] + iChange);
+	m_paiFreePromotionCount[eIndex] = m_paiFreePromotionCount[eIndex] + iChange;
 	CvAssert(getFreePromotionCount(eIndex) >= 0);
 }
 
@@ -11422,9 +11314,9 @@ template<typename T> void FillOutArray(T& kArray, uint uiWantSize, int iFillValu
 		kArray.resize(uiWantSize);
 		// Set any new DomainTypes to 0
 		for (uint uiI = uiOldSize; uiI < uiWantSize; uiI++)
-			kArray.setAt(uiI, iFillValue);
+			kArray[uiI] = iFillValue;
 		// We don't want to save this
-		kArray.clearDelta();
+		//kArray.clearDelta();
 	}
 }
 
@@ -11510,7 +11402,7 @@ void CvCity::read(FDataStream& kStream)
 	else
 	{
 		kStream >> m_iResourceDemanded;
-		m_iResourceDemanded = CvInfosSerializationHelper::ConvertV0((ResourceTypes)(m_iResourceDemanded.get()), CVINFO_V0_TAGS(CvInfosSerializationHelper::ms_V0ResourceTags));
+		m_iResourceDemanded = CvInfosSerializationHelper::ConvertV0((ResourceTypes)(m_iResourceDemanded), CVINFO_V0_TAGS(CvInfosSerializationHelper::ms_V0ResourceTags));
 	}
 	kStream >> m_iWeLoveTheKingDayCounter;
 	kStream >> m_iLastTurnGarrisonAssigned;
@@ -11556,7 +11448,7 @@ void CvCity::read(FDataStream& kStream)
 		m_aiLakePlotYield.resize(NUM_YIELD_TYPES);
 		for (int iI = 0; iI < NUM_YIELD_TYPES; iI++)
 		{
-			m_aiLakePlotYield.setAt(iI, 0);
+			m_aiLakePlotYield[iI] = 0;
 		}
 	}
 	kStream >> m_aiSeaResourceYield;
@@ -11584,9 +11476,9 @@ void CvCity::read(FDataStream& kStream)
 
 	if (uiVersion >= 14)
 	{
-		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiNoResource.dirtyGet());
-		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiFreeResource.dirtyGet());
-		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiNumResourcesLocal.dirtyGet());
+		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiNoResource);
+		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiFreeResource);
+		CvInfosSerializationHelper::ReadHashedDataArray(kStream, m_paiNumResourcesLocal);
 	}
 	else
 	{
@@ -11618,13 +11510,13 @@ void CvCity::read(FDataStream& kStream)
 				{
 					int iTempValue;
 					kStream >> iTempValue;
-					m_paiUnitProduction.setAt(iType, iTempValue);
+					m_paiUnitProduction[iType] = iTempValue;
 					kStream >> iTempValue;
-					m_paiUnitProductionTime.setAt(iType, iTempValue);
+					m_paiUnitProductionTime[iType] = iTempValue;
 					kStream >> iTempValue;
-					m_paiGreatPeopleUnitRate.setAt(iType, iTempValue);
+					m_paiGreatPeopleUnitRate[iType] = iTempValue;
 					kStream >> iTempValue;
-					m_paiGreatPeopleUnitProgress.setAt(iType, iTempValue);
+					m_paiGreatPeopleUnitProgress[iType] = iTempValue;
 				}
 				else
 				{
@@ -11649,25 +11541,25 @@ void CvCity::read(FDataStream& kStream)
 		for (int iI = 0; iI < iNumEntries; iI++)
 		{
 			kStream >> iTempValue;
-			m_paiUnitProduction.setAt(iI, iTempValue);
+			m_paiUnitProduction[iI] = iTempValue;
 		}
 		kStream >> iNumEntries;
 		for (int iI = 0; iI < iNumEntries; iI++)
 		{
 			kStream >> iTempValue;
-			m_paiUnitProductionTime.setAt(iI, iTempValue);
+			m_paiUnitProductionTime[iI] = iTempValue;
 		}
 		kStream >> iNumEntries;
 		for (int iI = 0; iI < iNumEntries; iI++)
 		{
 			kStream >> iTempValue;
-			m_paiGreatPeopleUnitRate.setAt(iI, iTempValue);
+			m_paiGreatPeopleUnitRate[iI] = iTempValue;
 		}
 		kStream >> iNumEntries;
 		for (int iI = 0; iI < iNumEntries; iI++)
 		{
 			kStream >> iTempValue;
-			m_paiGreatPeopleUnitProgress.setAt(iI, iTempValue);
+			m_paiGreatPeopleUnitProgress[iI] = iTempValue;
 		}
 	}
 	kStream >> m_paiSpecialistCount;
@@ -11694,7 +11586,7 @@ void CvCity::read(FDataStream& kStream)
 			if (sTemp != "PROMOTION_OLIGARCHY")
 			{
 				iType = GC.getInfoTypeForString(sTemp);
-				m_paiFreePromotionCount.setAt(iType, iTempValue);
+				m_paiFreePromotionCount[iType] = iTempValue;
 			}
 		}
 	}
@@ -11883,7 +11775,7 @@ void CvCity::write(FDataStream& kStream) const
 	kStream << m_iDamage;
 	kStream << m_iThreatValue;
 	kStream << m_iGarrisonedUnit;
-	CvInfosSerializationHelper::WriteHashed(kStream, (ResourceTypes)(m_iResourceDemanded.get()));
+	CvInfosSerializationHelper::WriteHashed(kStream, (ResourceTypes)(m_iResourceDemanded));
 	kStream << m_iWeLoveTheKingDayCounter;
 	kStream << m_iLastTurnGarrisonAssigned;
 	kStream << m_iThingsProduced;
@@ -12203,14 +12095,14 @@ void CvCity::invalidateYieldRankCache(YieldTypes eYield)
 	{
 		for (int iI = 0; iI < NUM_YIELD_TYPES; iI++)
 		{
-			m_abBaseYieldRankValid.setAt(iI, false);
-			m_abYieldRankValid.setAt(iI, false);
+			m_abBaseYieldRankValid[iI] = false;
+			m_abYieldRankValid[iI] = false;
 		}
 	}
 	else
 	{
-		m_abBaseYieldRankValid.setAt(eYield, false);
-		m_abYieldRankValid.setAt(eYield, false);
+		m_abBaseYieldRankValid[eYield] = false;
+		m_abYieldRankValid[eYield] = false;
 	}
 }
 
@@ -13276,17 +13168,17 @@ int CvCity::GetMaxHitPoints() const
 	return GC.getMAX_CITY_HIT_POINTS();
 }
 
-//	--------------------------------------------------------------------------------
-const FAutoArchive & CvCity::getSyncArchive() const
-{
-	return m_syncArchive;
-}
-
-//	--------------------------------------------------------------------------------
-FAutoArchive & CvCity::getSyncArchive()
-{
-	return m_syncArchive;
-}
+////	--------------------------------------------------------------------------------
+//const FAutoArchive & CvCity::getSyncArchive() const
+//{
+//	return m_syncArchive;
+//}
+//
+////	--------------------------------------------------------------------------------
+//FAutoArchive & CvCity::getSyncArchive()
+//{
+//	return m_syncArchive;
+//}
 
 //	--------------------------------------------------------------------------------
 std::string CvCity::debugDump(const FAutoVariableBase & /*var*/) const
@@ -13303,11 +13195,11 @@ std::string CvCity::debugDump(const FAutoVariableBase & /*var*/) const
 std::string CvCity::stackTraceRemark(const FAutoVariableBase & var) const
 {
 	std::string result = debugDump(var);
-	if(&var == &m_aiBaseYieldRateFromTerrain)
-	{
-		result += std::string("\nlast yield used to update from terrain = ") + FSerialization::toString(s_lastYieldUsedToUpdateRateFromTerrain) + std::string("\n");
-		result += std::string("change value used for update = ") + FSerialization::toString(s_changeYieldFromTerreain) + std::string("\n");
-	}
+	//if(&var == &m_aiBaseYieldRateFromTerrain)
+	//{
+	//	result += std::string("\nlast yield used to update from terrain = ") + FSerialization::toString(s_lastYieldUsedToUpdateRateFromTerrain) + std::string("\n");
+	//	result += std::string("change value used for update = ") + FSerialization::toString(s_changeYieldFromTerreain) + std::string("\n");
+	//}
 	return result;
 }
 
