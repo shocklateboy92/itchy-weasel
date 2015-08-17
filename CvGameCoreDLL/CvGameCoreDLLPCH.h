@@ -148,10 +148,10 @@ typedef wchar_t          wchar;
 
 using namespace fastdelegate;
 
-#ifdef FINAL_RELEASE
-// Undefine OutputDebugString in final release builds
-#undef OutputDebugString
-#define OutputDebugString(x)
-#endif //FINAL_RELEASE
+//#ifdef FINAL_RELEASE
+//// Undefine OutputDebugString in final release builds
+//#undef OutputDebugString
+//#define OutputDebugString(x)
+//#endif //FINAL_RELEASE
 
 #endif	// CVGAMECOREDLLPCH_H
