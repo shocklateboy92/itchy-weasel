@@ -144,6 +144,7 @@ typedef wchar_t          wchar;
 #include "CvCityConnections.h"
 #include "CvAdvisorCounsel.h"
 #include "CvAdvisorRecommender.h"
+#include "Debug.h"
 
 using namespace fastdelegate;
 
