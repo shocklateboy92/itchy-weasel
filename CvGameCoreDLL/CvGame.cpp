@@ -6965,6 +6965,7 @@ void CvGame::doTurn()
 		}
 	}
 
+	odprintf("looking for main call to begin turn");
 	// Configure turn active status for the beginning of the new turn.
 	if(isOption(GAMEOPTION_DYNAMIC_TURNS) || isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
 	{// In multi-player with simultaneous turns, we activate all of the AI players
@@ -7031,6 +7032,7 @@ void CvGame::doTurn()
 
 	DoUnitedNationsCountdown();
 
+	odprintf("Turns should be over, test victory");
 	// Victory stuff
 	testVictory();
 
@@ -7063,6 +7065,7 @@ void CvGame::doTurn()
 	}
 
 	gDLL->PublishNewGameTurn(getGameTurn());
+	odprintf("END ROUND (i think)");
 }
 
 //	--------------------------------------------------------------------------------

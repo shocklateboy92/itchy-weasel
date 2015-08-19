@@ -380,6 +380,7 @@ void CvGrandStrategyAI::DoTurn()
 		}
 	}
 
+	odprintf("Pursuing Grand Strategy %d", GetActiveGrandStrategy());
 	LogGrandStrategies(viGrandStrategyChangeForLogging);
 }
 

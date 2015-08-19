@@ -2669,7 +2669,7 @@ bool CvPlayer::isHuman() const
 	{
 		return false;
 	}
-
+	return false;
 	return CvPreGame::isHuman(GetID());
 }
 
@@ -2976,7 +2976,7 @@ void CvPlayer::doTurn()
 
 	CvAssertMsg(isAlive(), "isAlive is expected to be true");
 
-	doUpdateCacheOnTurn();
+	doUpdateCacheOnTurn(); // This is actually empty
 
 	AI_doTurnPre();
 
@@ -3156,7 +3156,7 @@ void CvPlayer::doTurnUnits()
 	AI_doTurnUnitsPre();
 
 	// Start: TACTICAL AI UNIT PROCESSING
-	m_pTacticalAI->DoTurn();
+	m_pTacticalAI->DoTurn(); // This is also an empty function
 
 	// Start: OPERATIONAL AI UNIT PROCESSING
 	std::map<int, CvAIOperation*>::iterator iter;
@@ -3222,6 +3222,7 @@ void CvPlayer::doTurnUnits()
 	// Homeland AI
 	m_pHomelandAI->DoTurn();
 
+	// UNITS DO THEIR TURNS HERE
 	// Start: old unit AI processing
 	for (int iPass = 0; iPass < 4; iPass++)
 	{
@@ -3266,6 +3267,8 @@ void CvPlayer::doTurnUnits()
 		}
 	}
 
+	odprintf("Units end their turns");
+
 	if (GetID() == GC.getGame().getActivePlayer())
 	{
 		GC.GetEngineUserInterface()->setDirty(Waypoints_DIRTY_BIT, true);
@@ -3274,7 +3277,9 @@ void CvPlayer::doTurnUnits()
 
 	GC.GetEngineUserInterface()->setDirty(UnitInfo_DIRTY_BIT, true);
 
+	odprintf("Units Post");
 	AI_doTurnUnitsPost();
+	odprintf("Units all finished");
 }
 
 //	--------------------------------------------------------------------------------
@@ -11995,6 +12000,7 @@ void CvPlayer::setTurnActive(bool bNewValue, bool bDoTurn)
 {
 	if (isTurnActive() != bNewValue)
 	{
+		odprintf("oookay?");
 		m_bTurnActive = bNewValue;
 		DLLUI->PublishEndTurnDirty();
 
@@ -12006,6 +12012,7 @@ void CvPlayer::setTurnActive(bool bNewValue, bool bDoTurn)
 
 		if (isTurnActive())
 		{
+			odprintf("%s Turn Beginning", getName());
 			CvAssertMsg(isAlive(), "isAlive is expected to be true");
 
 			setEndTurn(false);
@@ -12126,6 +12133,7 @@ void CvPlayer::setTurnActive(bool bNewValue, bool bDoTurn)
 
 		else
 		{
+			odprintf("%s Turn ending", getName());
 			CvAssertFmt(GetEndTurnBlockingType() == NO_ENDTURN_BLOCKING_TYPE, "Expecting the end-turn blocking to be NO_ENDTURN_BLOCKING_TYPE, got %d", GetEndTurnBlockingType());
 			SetEndTurnBlocking(NO_ENDTURN_BLOCKING_TYPE, -1);	// Make sure this is clear so the UI doesn't block when it is not our turn.
 
@@ -12377,6 +12385,7 @@ void CvPlayer::SetEndTurnBlocking(EndTurnBlockingTypes eBlockingType, int iNotif
 //	---------------------------------------------------------------------------
 bool CvPlayer::isTurnDone() const
 {
+	return true;
 	// if this returns true, popups and diplomacy will wait to appear until next turn
 	if (!GC.getGame().isPbem() && !GC.getGame().isHotSeat())
 	{
@@ -15316,6 +15325,8 @@ bool CvPlayer::IsCityAlreadyTargeted(CvCity *pCity, DomainTypes eDomain, int iPe
 //	--------------------------------------------------------------------------------
 void CvPlayer::addPopup(CvPopupInfo* pInfo, bool bFront)
 {
+	// getting sick of these
+	return;
 	if (isHuman())
 	{
 		if (bFront)
