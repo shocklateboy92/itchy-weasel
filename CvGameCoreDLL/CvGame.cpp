@@ -133,6 +133,7 @@ m_jonRand(false)
 	m_endTurnTimer.Start();
 	m_endTurnTimer.Stop();
 
+
 	reset(NO_HANDICAP, true);
 }
 
@@ -372,7 +373,8 @@ void CvGame::init(HandicapTypes eHandicap)
 bool CvGame::init2()
 {
 	InitPlayers();
-
+	changeAIAutoPlay(1); // start observer game
+	ReviveActivePlayer();
 	CvGameInitialItemsOverrides kItemOverrides;
 	if (!InitMap(kItemOverrides))
 	{
@@ -6943,6 +6945,7 @@ void CvGame::doTurn()
 	GC.GetEngineUserInterface()->setCanEndTurn(false);
 	GC.GetEngineUserInterface()->setHasMovedUnit(false);
 
+	
 	if (getAIAutoPlay() > 0)
 	{
 		changeAIAutoPlay(-1);

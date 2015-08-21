@@ -236,8 +236,8 @@ FDataStream & operator<<(FDataStream & stream, const CustomOption & option)
 	PREGAMEVAR         (std::vector<bool>,                  s_playableCivs,           MAX_PLAYERS);
 	PREGAMEVAR         (std::vector<PlayerColorTypes>,      s_playerColors,           MAX_PLAYERS);
 	PREGAMEVAR         (bool,                               s_privateGame,            false);
-	PREGAMEVAR         (bool,                               s_quickCombat,            false);
-	PREGAMEVAR         (bool,                               s_quickCombatDefault,     false);
+	PREGAMEVAR         (bool,                               s_quickCombat,            true);
+	PREGAMEVAR         (bool,                               s_quickCombatDefault,     true);
 	PREGAMEVAR         (HandicapTypes,                      s_quickHandicap,          NO_HANDICAP);
 	PREGAMEVAR         (bool,                               s_quickstart,             false);
 	PREGAMEVAR         (bool,                               s_randomWorldSize,        false);
@@ -1675,6 +1675,7 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 
 	bool quickMovement()
 	{
+		return true; // making this happen by default, i'm sick of setting it
 		int iValue;
 		if (GetGameOption(GAMEOPTION_QUICK_MOVEMENT_KEY, iValue))
 			return iValue != 0;
@@ -2262,6 +2263,7 @@ HandicapTypes lastHumanHandicap(PlayerTypes p)
 
 	void setAutorunTurnDelay(float turnDelay)
 	{
+		return;
 		s_autorunTurnDelay = turnDelay;
 	}
 

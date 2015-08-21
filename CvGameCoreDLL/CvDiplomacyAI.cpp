@@ -1582,7 +1582,7 @@ void CvDiplomacyAI::DoTurn(PlayerTypes eTargetPlayer)
 
 		DoUpdateDemands();
 
-		DoUpdatePlanningExchanges();
+		DoUpdatePlanningExchanges(); // Research agreements
 		DoContactMinorCivs();
 		DoContactMajorCivs();
 		GC.getGame().GetGameDeals()->DoCancelAllProposedDealsWithPlayer(GetPlayer()->GetID());	//Proposed deals with AI players are purely transitional.

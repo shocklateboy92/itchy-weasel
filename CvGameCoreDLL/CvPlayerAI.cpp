@@ -429,6 +429,7 @@ void CvPlayerAI::AI_chooseResearch()
 
 	clearResearchQueue();
 
+	// Teams share diplomacy
 	if (GetPlayerTechs()->GetCurrentResearch() == NO_TECH)
 	{
 		for (iI = 0; iI < MAX_PLAYERS; iI++)

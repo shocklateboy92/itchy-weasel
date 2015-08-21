@@ -2669,7 +2669,7 @@ bool CvPlayer::isHuman() const
 	{
 		return false;
 	}
-	return false;
+	//return false;
 	return CvPreGame::isHuman(GetID());
 }
 
