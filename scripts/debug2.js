@@ -12,10 +12,10 @@ function bind() {
 	console.log("Found Module: " + cvModule.name);
 
 	threadProbe();
-	gameStateBind();
+	bindGameState();
 }
 
-function gameStateBind() {
+function bindGameState() {
 	var entryPoint = Module.findExportByName(cvModule.name, "DllGetGameContext");
 	var getGameState = new NativeFunction(entryPoint, 'pointer', []);
 	var gameState = getGameState();
@@ -23,14 +23,26 @@ function gameStateBind() {
 	var vtable = Memory.readPointer(gameState);
 	console.log("Found ICvGameContext1 at " + vtable);
 
-	for (var i = 0; i < 65; i++) {
+	var i = 0;
+	do {
 		var fn = Memory.readPointer(vtable.add(Process.pointerSize * i));
-		console.log("\tFound method: " + DebugSymbol.fromAddress(fn).name + "()");
-	}
+		var method = DebugSymbol.fromAddress(fn);
+
+		console.log("\tFound method: " + method.name + "()");
+		bindMethod(fn);
+
+		i++;
+	} while(method.moduleName === cvModule.name);
+}
+
+function bindMethod (address) {
+	// Interceptor.attach(address, {
+		//TODO: implement body
+	// });
 }
 
 // this is probably not worth it, since the DLL only exports 1 entry point.
-function exportBind() {
+function bindExports() {
 	console.log("Binding to all exports...");
 	Module.enumerateExports(cvModule.name, {
 		onMatch: function(exp) {
