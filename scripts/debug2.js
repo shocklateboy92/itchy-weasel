@@ -6,19 +6,26 @@
 
 console.log("Starting Trace...");
 
-function bind() {
-	var cvGame = Process.findModuleByName("CvGameCoreDLLFinal Release.dll");
-	console.log("Found Module: " + cvGame.name);
+var cvModule = Process.findModuleByName("CvGameCoreDLLFinal Release.dll");
 
-	console.log("Setting up interceptors...");
-	Module.enumerateExports(cvGame.name, {
-		onMatch: function(exp) {
-			console.log(exp.name);
+function bind() {
+	console.log("Found Module: " + cvModule.name);
+
+	threadProbe();
+}
+
+function threadProbe() {
+	console.log("Probing threads...");
+	Process.enumerateThreads({
+		onMatch: function(thread) {
+			console.log("\tFound thread " + thread.id + ", currently " + thread.state);
 		},
 		onComplete: function() {
-			console.log("Finished setting up.")
+			console.log("Thread probe complete.");
 		}
 	});
+
+	console.log("Currently active thread is " + Process.getCurrentThreadId());
 }
 
 bind();
