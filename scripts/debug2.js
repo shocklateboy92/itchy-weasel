@@ -12,7 +12,30 @@ function bind() {
 	console.log("Found Module: " + cvModule.name);
 
 	threadProbe();
-	bindGameState();
+	// bindExports();
+	// bindGameState();
+	bindAllSymbols();
+}
+
+function bindAllSymbols() {
+	var symbols = DebugSymbol.findFunctionsMatching("*");
+	// var start = cvModule.base;
+	// var end = start.add(cvModule.size);
+	for (var i in symbols) {
+		var addr = symbols[i];
+		var method = DebugSymbol.fromAddress(addr);
+
+		if (method.moduleName !== cvModule.name) {
+			continue;
+		}
+
+		console.log(method.name);
+		try {
+			bindMethod(addr, method.name);
+		} catch (e) {
+			console.log(e.toString());
+		}
+	}
 }
 
 function bindGameState() {
@@ -20,7 +43,17 @@ function bindGameState() {
 	var getGameState = new NativeFunction(entryPoint, 'pointer', []);
 	var gameState = getGameState();
 
-	var vtable = Memory.readPointer(gameState);
+	// bindObject(gameState);
+
+	var getPreGame_addr = DebugSymbol.getFunctionByName("CvDllGameContext::GetPreGame");
+	var getPreGame = new NativeFunction(getPreGame_addr, 'pointer', ['pointer']);
+	var preGame = getPreGame(gameState);
+	console.log("got PreGame: " + preGame);
+	bindObject(getPreGame(preGame));
+}
+
+function bindObject(address, name) {
+	var vtable = Memory.readPointer(address);
 	console.log("Found ICvGameContext1 at " + vtable);
 
 	var i = 0;
@@ -29,16 +62,29 @@ function bindGameState() {
 		var method = DebugSymbol.fromAddress(fn);
 
 		console.log("\tFound method: " + method.name + "()");
-		bindMethod(fn);
+		try {
+			bindMethod(fn, method.name);
+		} catch (e) {
+			console.log(e.toString());
+		}
 
 		i++;
 	} while(method.moduleName === cvModule.name);
 }
 
-function bindMethod (address) {
-	// Interceptor.attach(address, {
-		//TODO: implement body
-	// });
+function bindMethod (address, name) {
+	Interceptor.attach(address, {
+		onEnter: function(args) {
+			console.log("Entering " + name + "() with:")
+			for (var x in args) {
+				console.log("\targ" + x + "=" + args[x]);
+			}
+		},
+		onLeave: function(retval) {
+			console.log("Returning from " + name + "() with:");
+			console.log("\tretval=" + retval);
+		}
+	});
 }
 
 // this is probably not worth it, since the DLL only exports 1 entry point.
