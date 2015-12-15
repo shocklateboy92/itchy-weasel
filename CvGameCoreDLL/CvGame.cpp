@@ -373,8 +373,8 @@ void CvGame::init(HandicapTypes eHandicap)
 bool CvGame::init2()
 {
 	InitPlayers();
-	changeAIAutoPlay(1); // start observer game
-	ReviveActivePlayer();
+	//changeAIAutoPlay(0); // start observer game
+	//ReviveActivePlayer();
 	CvGameInitialItemsOverrides kItemOverrides;
 	if (!InitMap(kItemOverrides))
 	{

@@ -7,6 +7,11 @@
 console.log("Starting Trace...");
 
 var cvModule = Process.findModuleByName("CvGameCoreDLLFinal Release.dll");
+const SYMBOL_PATTERNS = [
+	"CvDllGameContext::*",
+	"CvGame::*",
+	"CvPreGame::*"
+];
 
 function bind() {
 	console.log("Found Module: " + cvModule.name);
@@ -14,11 +19,13 @@ function bind() {
 	threadProbe();
 	// bindExports();
 	// bindGameState();
-	bindAllSymbols();
+	for (var x in SYMBOL_PATTERNS) {
+		bindMatchingSymbols(SYMBOL_PATTERNS[x]);
+	}
 }
 
-function bindAllSymbols() {
-	var symbols = DebugSymbol.findFunctionsMatching("*");
+function bindMatchingSymbols(pattern) {
+	var symbols = DebugSymbol.findFunctionsMatching(pattern);
 	// var start = cvModule.base;
 	// var end = start.add(cvModule.size);
 	for (var i in symbols) {
@@ -75,14 +82,15 @@ function bindObject(address, name) {
 function bindMethod (address, name) {
 	Interceptor.attach(address, {
 		onEnter: function(args) {
-			console.log("Entering " + name + "() with:")
+			// console.log("Entering " + name + "() with:")
+			console.log(args.length);
 			for (var x in args) {
 				console.log("\targ" + x + "=" + args[x]);
 			}
 		},
 		onLeave: function(retval) {
-			console.log("Returning from " + name + "() with:");
-			console.log("\tretval=" + retval);
+			// console.log("Returning from " + name + "() with:");
+			// console.log("\tretval=" + retval);
 		}
 	});
 }
